@@ -4,7 +4,7 @@
 
 #include "Microphone_PDM.h"
 
-Microphone_PDM_RTL872x::Microphone_PDM_RTL872x() {
+Microphone_PDM_RTL872x::Microphone_PDM_RTL872x() : Microphone_PDM_Base(BUFFER_SIZE_SAMPLES) {
 
 }
 
@@ -14,7 +14,19 @@ Microphone_PDM_RTL872x::~Microphone_PDM_RTL872x() {
 
 
 int Microphone_PDM_RTL872x::init() {
-    dmic_setup(16000, stereoMode);
+    switch(sampleRate) {
+        case 8000:
+        case 16000:
+        case 32000:
+            break;
+
+        default:
+            // Invalid value
+            sampleRate = 16000;
+            break;
+    }
+
+    dmic_setup(sampleRate, stereoMode);
     return 0;
 }
 
@@ -40,7 +52,7 @@ bool Microphone_PDM_RTL872x::samplesAvailable() const {
 bool Microphone_PDM_RTL872x::copySamples(void*pSamples) {
     int16_t *src = (int16_t *)dmic_ready();
 	if (src) {
-		copySamplesInternal(src, pSamples, BUFFER_SIZE_SAMPLES);
+		copySamplesInternal(src, pSamples);
         dmic_read(NULL, 0);
 		return true;
 	}
@@ -52,7 +64,7 @@ bool Microphone_PDM_RTL872x::copySamples(void*pSamples) {
 bool Microphone_PDM_RTL872x::noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback) {
     int16_t *src = (int16_t *)dmic_ready();
 	if (src) {
-		copySamplesInternal(src, src, BUFFER_SIZE_SAMPLES);
+		copySamplesInternal(src, src);
 		callback(src, BUFFER_SIZE_SAMPLES);
         dmic_read(NULL, 0);
 		return true;

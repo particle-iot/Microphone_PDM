@@ -2,25 +2,51 @@
 // npm install
 // 
 // Run
-// npm run
+// node server.js 
 
-var fs = require('fs');
-var path = require('path');
-var net = require('net');
-var wav = require('wav'); // https://github.com/TooTallNate/node-wav
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+
+const net = require('net');
+const wav = require('wav'); // https://github.com/TooTallNate/node-wav
+
+let addresses = [];
+{
+    const ifaces = os.networkInterfaces();
+    
+    // http://stackoverflow.com/questions/3653065/get-local-ip-address-in-node-js
+    Object.keys(ifaces).forEach(function (ifname) {
+        ifaces[ifname].forEach(function (iface) {
+            if ('IPv4' !== iface.family || iface.internal !== false) {
+                // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
+                return;
+            }
+            console.log("found address " + ifname + ": " + iface.address);
+            
+            addresses.push(iface.address);
+        });
+    });    
+}
+
+const yargs = require('yargs/yargs')
+const { hideBin } = require('yargs/helpers')
+const argv = yargs(hideBin(process.argv)).argv
 
 // For this simple test, just create wav files in the "out" directory in the directory
 // where audioserver.js lives.
 var outputDir = path.join(__dirname, "out");  
 
-var dataPort = 7123; // this is the port to listen on for data from the Photon
+var dataPort = argv.port || 7123; // this is the port to listen on for data from
+console.log('listening on port ' + dataPort);
 
 // If changing the sample frequency in the Particle code, make sure you change this!
 var wavOpts = {
-	'channels':1,
-	'sampleRate':16000,
-	'bitDepth':8
+	'channels': (argv.channels || 1),
+	'sampleRate': (argv.rate || 16000),
+	'bitDepth': (argv.bits || 16),
 };
+console.log('configuration', wavOpts);
 
 // Output files in the out directory are of the form 00001.wav. lastNum is used 
 // to speed up scanning for the next unique file.
@@ -33,7 +59,7 @@ try {
 catch(e) {
 }
 
-// Start a TCP Server. This is what receives data from the Particle Photon
+// Start a TCP Server. This is what receives data from the Particle device
 // https://gist.github.com/creationix/707146
 net.createServer(function (socket) {
 	console.log('data connection started from ' + socket.remoteAddress);

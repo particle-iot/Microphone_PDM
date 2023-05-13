@@ -35,9 +35,31 @@ public:
 		RANGE_32768, 	//!< From -32768 to 32767 (16 bits) (same as raw mode)
 	};
 
+	/**
+	 * @brief Return the number of samples (not bytes!) in the DMA buffer
+	 * 
+	 * @return size_t 
+	 */
+	size_t getNumSamples() const { return numSamples; };
+
+	/**
+	 * @brief Get the sample size in bytes
+	 * 
+	 * @return size_t 1 (8-bit samples) or 2 (16-bit samples)
+	 */
+	size_t getSampleSizeInBytes() const;
+
+	/**
+	 * @brief Get the buffer size in bytes
+	 * 
+	 * @return size_t 
+	 */
+	size_t getBufferSizeInBytes() const {
+		return getSampleSizeInBytes() * getNumSamples();
+	}
 
 protected:
-	Microphone_PDM_Base() {};
+	Microphone_PDM_Base(size_t numSamples) : numSamples(numSamples) {};
 	virtual ~Microphone_PDM_Base() {};
 
 	/**
@@ -46,16 +68,15 @@ protected:
 	 * @param src 
 	 * @param dst 
 	 */
-	void copySamplesInternal(const int16_t *src, void *dst, size_t numSamples) const;
-
+	void copySamplesInternal(const int16_t *src, void *dst) const;
 
 	pin_t clkPin = A0;		//!< The pin used for the PDM clock (output)
 	pin_t datPin = A1;		//!< The pin used for the PDM data (input)
 	bool stereoMode = false;	//!< Use stereo mode (default: false, mono mode)
-	int sampleRate; //!< Either 8000 or 16000 only!
+	int sampleRate; //!< Either 8000 or 16000 only. Not supported on nRF52.
 	OutputSize outputSize = OutputSize::SIGNED_16;	//!< Output size (8 or 16 bits)
 	Range range = Range::RANGE_2048;				//!< Range adjustment factor
-
+	size_t numSamples; //!< Number of samples in the DMA buffer
 };
 
 // This is here because the platform-specific classes derive from Microphone_PDM_Base
@@ -139,6 +160,16 @@ public:
 	Microphone_PDM &withRange(Range range) { this->range = range; return *this; };
 
 	/**
+	 * @brief Sets the sampling rate. Default is 16000. Cannot be changed on nRF52!
+	 *
+	 * @param sampleRate 8000 or 16000. The default is 16000.
+	 * 
+	 * This call can only be used on RTL827x (P2, Photon 2). It is ignored on nRF52.
+	 * Setting an invalid value will use 16000.
+	 */
+	Microphone_PDM &withSampleRate(int sampleRate) { this->sampleRate = sampleRate; return *this; };
+
+	/**
 	 * @brief Initialize the PDM module.
 	 *
 	 * This is often done from setup(). You can defer it until you're ready to sample if desired,
@@ -219,16 +250,30 @@ public:
 		return Microphone_PDM_MCU::copySamples(pSamples);
 	}
 
+	/**
+	 * @brief Alternative API to get samples
+	 *
+	 * @param callback Callback function or lambda
+	 *  
+	 * @return true 
+	 * @return false 
+	 * 
+	 * Alternative API that does not require a buffer to be passed in. You should only use this if you can
+	 * consume the buffer immediately without blocking. 
+	 * 
+	 * The callback function or lamba has this prototype:
+	 * 
+	 *   void callback(void *pSamples, size_t numSamples)
+	 * 
+	 * It will be called with a pointer to the samples (in the DMA buffer) and the number of samples (not bytes!) 
+	 * of data. The number of bytes will vary depending on the outputSize. 
+	 * 
+	 * You can skip calling samplesAvailable() and just call noCopySamples which will return false in the same cases
+	 * where samplesAvailable() would have returned false.
+	 */
 	bool noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback) {
 		return Microphone_PDM_MCU::noCopySamples(callback);
 	}
-
-	/**
-	 * @brief Sets the sampling sampleRate.  Default is 16000. Can be set to 8000. Other values not supported.
-	 *
-	 * @param sampleRate 8000 or 16000. The default is 16000.
-	 */
-	Microphone_PDM &withSampleRate(int sampleRate) { this->sampleRate = sampleRate; return *this; };
 
 #if 0
 	/**

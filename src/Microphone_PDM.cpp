@@ -41,7 +41,18 @@ Microphone_PDM &Microphone_PDM::withGainDb(float gain) {
 }
 #endif
 
-void Microphone_PDM_Base::copySamplesInternal(const int16_t *src, void *dst, size_t numSamples) const {
+size_t Microphone_PDM_Base::getSampleSizeInBytes() const {
+	switch(outputSize) {
+		case OutputSize::UNSIGNED_8:
+			return 1;
+
+		default:
+			return 2;
+	}
+}
+
+
+void Microphone_PDM_Base::copySamplesInternal(const int16_t *src, void *dst) const {
 	if (outputSize == OutputSize::UNSIGNED_8) {
 
 		// Scale the 16-bit signed values to an appropriate range for unsigned 8-bit values

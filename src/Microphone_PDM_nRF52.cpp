@@ -4,7 +4,7 @@
 
 #include "Microphone_PDM.h"
 
-Microphone_PDM_nRF52::Microphone_PDM_nRF52() {
+Microphone_PDM_nRF52::Microphone_PDM_nRF52() : Microphone_PDM_Base(BUFFER_SIZE_SAMPLES) {
 
 }
 
@@ -74,7 +74,7 @@ bool Microphone_PDM_nRF52::samplesAvailable() const {
 
 bool Microphone_PDM_nRF52::copySamples(void*pSamples) {
 	if (currentSampleAvailable) {
-		copySamplesInternal(currentSampleAvailable, pSamples, BUFFER_SIZE_SAMPLES);
+		copySamplesInternal(currentSampleAvailable, pSamples);
 		currentSampleAvailable = NULL;
 		return true;
 	}
@@ -85,7 +85,7 @@ bool Microphone_PDM_nRF52::copySamples(void*pSamples) {
 
 bool Microphone_PDM_nRF52::noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback) {
 	if (currentSampleAvailable) {
-		copySamplesInternal(currentSampleAvailable, currentSampleAvailable, BUFFER_SIZE_SAMPLES);
+		copySamplesInternal(currentSampleAvailable, currentSampleAvailable);
 		callback(currentSampleAvailable, BUFFER_SIZE_SAMPLES);
 		currentSampleAvailable = NULL;
 		return true;
