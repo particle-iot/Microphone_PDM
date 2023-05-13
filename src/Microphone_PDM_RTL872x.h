@@ -1,10 +1,12 @@
 #pragma once
 
+#include "rtl_dmic_api.h"
+
 class Microphone_PDM_RTL872x : public Microphone_PDM_Base
 {
 public:
-    static const size_t BUFFER_SIZE_SAMPLES = 256; //!< 512 bytes per buffer
-    static const size_t NUM_BUFFERS = 4;  //!< 4 buffers, so 2048 bytes total
+    static const size_t BUFFER_SIZE_SAMPLES = SP_DMA_PAGE_SIZE / 2; //!< 512 bytes per buffer
+    static const size_t NUM_BUFFERS = SP_DMA_PAGE_NUM;  //!< 4 buffers, so 2048 bytes total
 
 protected:
     Microphone_PDM_RTL872x();
@@ -37,10 +39,7 @@ protected:
 	/**
 	 * @brief Stop sampling
 	 */
-	virtual int stop() {
-        return SYSTEM_ERROR_NOT_SUPPORTED;
-    }
-
+	virtual int stop();
 
 	/**
 	 * @brief Return true if there is data available to be copied using copySamples
@@ -48,9 +47,7 @@ protected:
 	 * @return true 
 	 * @return false 
 	 */
-	virtual bool samplesAvailable() const {
-        return false;
-	}
+	virtual bool samplesAvailable() const;
 
 	/**
 	 * @brief Copy samples from the DMA buffer to your buffer
@@ -66,12 +63,13 @@ protected:
 	 * You can skip calling samplesAvailable() and just call copySamples which will return false in the same cases
 	 * where samplesAvailable() would have returned false.
 	 */
-	virtual bool copySamples(void* pSamples) const {
-        return false;
-	}
-
+	virtual bool copySamples(void* pSamples);
+	
 	
     virtual bool noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback);
+
+protected:
+	bool running = false;
 
 };
 

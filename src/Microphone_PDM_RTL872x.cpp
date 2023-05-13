@@ -13,4 +13,54 @@ Microphone_PDM_RTL872x::~Microphone_PDM_RTL872x() {
 }
 
 
+int Microphone_PDM_RTL872x::init() {
+    dmic_setup(16000, stereoMode);
+    return 0;
+}
+
+
+int Microphone_PDM_RTL872x::start() {
+    dmic_flush();
+
+    running = true;
+    return 0;
+}
+
+int Microphone_PDM_RTL872x::stop() {
+    running = false;
+    return 0;
+}
+ 
+
+
+bool Microphone_PDM_RTL872x::samplesAvailable() const {
+	return (dmic_ready() != NULL);
+}
+
+bool Microphone_PDM_RTL872x::copySamples(void*pSamples) {
+    int16_t *src = (int16_t *)dmic_ready();
+	if (src) {
+		copySamplesInternal(src, pSamples, BUFFER_SIZE_SAMPLES);
+        dmic_read(NULL, 0);
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool Microphone_PDM_RTL872x::noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback) {
+    int16_t *src = (int16_t *)dmic_ready();
+	if (src) {
+		copySamplesInternal(src, src, BUFFER_SIZE_SAMPLES);
+		callback(src, BUFFER_SIZE_SAMPLES);
+        dmic_read(NULL, 0);
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+
 #endif // HAL_PLATFORM_RTL872X
