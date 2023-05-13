@@ -4,7 +4,9 @@
 #include "Particle.h"
 
 /**
- * @brief Class used for settings. You will not instantiate one of these; it's a base class of Microphone_PDM_MCU
+ * @brief Class used for settings. You will not instantiate one of these; it's a base class of Microphone_PDM_MCU.
+ * 
+ * There are accessor methods for setting these settings in the Microphone_PDM class.
  */
 class Microphone_PDM_Base {
 public:
@@ -39,6 +41,8 @@ public:
 	 * @brief Return the number of samples (not bytes!) in the DMA buffer
 	 * 
 	 * @return size_t 
+	 * 
+	 * You can use this with copySamples() to know how big of a buffer you need.
 	 */
 	size_t getNumSamples() const { return numSamples; };
 
@@ -46,27 +50,45 @@ public:
 	 * @brief Get the sample size in bytes
 	 * 
 	 * @return size_t 1 (8-bit samples) or 2 (16-bit samples)
+	 * 
 	 */
 	size_t getSampleSizeInBytes() const;
 
 	/**
 	 * @brief Get the buffer size in bytes
 	 * 
-	 * @return size_t 
+	 * @return size_t Size of the DMA buffer in bytes
+	 * 
+	 * You can use this with copySamples() to know how big of a buffer you need if you are allocating a
+	 * buffer in bytes instead of samples.
 	 */
 	size_t getBufferSizeInBytes() const {
 		return getSampleSizeInBytes() * getNumSamples();
 	}
 
 protected:
+	/**
+	 * @brief You cannot instantiate one of these, it's only done by the subclass, which is a Microphone_PDM_* MCU-specific class
+	 * 
+	 * @param numSamples The value of BUFFER_SIZE_SAMPLES defined in the MCU-specific subclass
+	 */
 	Microphone_PDM_Base(size_t numSamples) : numSamples(numSamples) {};
+
+	/**
+	 * @brief This class is never deleted
+	 */
 	virtual ~Microphone_PDM_Base() {};
 
 	/**
-	 * @brief Used internally. Use copySamples() externally
+	 * @brief Used internally. Use copySamples() externally.
 	 * 
-	 * @param src 
-	 * @param dst 
+	 * @param src Pointer to the internal DMA buffer, which is always 16-bit samples
+	 * @param dst Pointer to the destination buffer, which will be 8 or 16-bit samples, depending on outputSize
+	 * 
+	 * Also pays attention to range to determine how much to shift the samples, unless the output size
+	 * is RAW_SIGNED_16, which does not do any transformation.
+	 * 
+	 * src and dst can be the same buffer to transform the data range in place.
 	 */
 	void copySamplesInternal(const int16_t *src, void *dst) const;
 
@@ -94,6 +116,12 @@ protected:
  *
  * This works on P2 and Photon 2 (RTL8721DM) as well as Boron, B Series SoM, Tracker SoM, and Argon (nRF52840).
  * 
+ * It is a singleton class. You cannot construct a variable of this type, or copy this class. Instead, use
+ * Microphone_PDM::instance() to get the singleton instance.
+ * 
+ * You can create an instance at early initialization (STARTUP or global object construction) but you cannot
+ * call init() at that time. In almost all cases, you will first use Microphone_PDM::instance() from setup
+ * to configure the settings.
  */
 class Microphone_PDM : public Microphone_PDM_MCU {
 public:
@@ -138,6 +166,11 @@ public:
 	 * - SIGNED_16,	    Output signed 16-bit values (adjusted by PDMRange) (default)
 	 * - RAW_SIGNED_16  Output values as signed 16-bit values as returned by nRF52 (unadjusted)
 	 *
+	 * The DMA buffer is always 16 bit, and if you use UNSIGNED_8 it just discards the unused bits
+	 * when copying the samples using copySamples() or noCopySamples().
+	 * 
+	 * This is only relevant because you will be called at the rate you'd expect for 16-bit samples
+	 * even when using 8-bit output.
 	 */
 	Microphone_PDM &withOutputSize(OutputSize outputSize) { this->outputSize = outputSize; return *this; };
 
@@ -156,13 +189,15 @@ public:
 	 * RANGE_16384 From -16384 to 16383 (15 bits)
 	 * RANGE_32768 From -32768 to 32767 (16 bits) (same as raw mode)
 	 *
+	 * The range should be set based on the PDM microphone you are using. For the Adafruit microphone,
+	 * the default value of RANGE_2048 (12-bit) is correct. 
 	 */
 	Microphone_PDM &withRange(Range range) { this->range = range; return *this; };
 
 	/**
 	 * @brief Sets the sampling rate. Default is 16000. Cannot be changed on nRF52!
 	 *
-	 * @param sampleRate 8000 or 16000. The default is 16000.
+	 * @param sampleRate 8000, 16000, or 32000. The default is 16000.
 	 * 
 	 * This call can only be used on RTL827x (P2, Photon 2). It is ignored on nRF52.
 	 * Setting an invalid value will use 16000.
@@ -200,8 +235,8 @@ public:
 	 * @brief Stop sampling
 	 * 
 	 * On the RTL872x (P2, Photon 2), it's not actually possible to stop sampling once you
-	 * start it, but calling stop will prevent the buffer from being processed. Buffer 
-	 * notifications will stop, 
+	 * start it. Calling stop() will discard the data and samplesAvailable(), copySamples(),
+	 * etc. will behave as if the DMA had been stopped.
 	 */
 	int stop() {
 		return Microphone_PDM_MCU::stop();
@@ -275,40 +310,6 @@ public:
 		return Microphone_PDM_MCU::noCopySamples(callback);
 	}
 
-#if 0
-	/**
-	 * @brief Sets the gain in dB
-	 *
-	 * @param gainDb Gain in dB, from -20 (minimum) to +20 (maximum) in 0.5 dB steps
-	 */
-	Microphone_PDM &withGainDb(float gainDb);
-
-	/**
-	 * @brief Sets the PDM gain using an rRF52 configuration value
-	 *
-	 * @param gainL The nRF52 gain value for the left or mono channel
-
-	 * @param gainR The nRF52 gain value for the right channel
-	 *
-	 * - NRF_PDM_GAIN_MINIMUM (0x00)
-	 * - NRF_PDM_GAIN_DEFAULT (0x28) 0 dB gain, default value
-	 * - NRF_PDM_GAIN_MAXIMUM (0x50)
-	 */
-	Microphone_PDM &withGain(nrf_pdm_gain_t gainL, nrf_pdm_gain_t gainR) { this->gainL = gainL; this->gainR = gainR; return *this; };
-
-	/**
-	 * @brief Sets the edge mode
-	 *
-	 * @param edge Edge mode. Whether left or mono channel is sample on falling CLK (default) or rising CLK
-	 *
-	 * - NRF_PDM_EDGE_LEFTFALLING Left (or mono) is sampled on falling edge of PDM_CLK (default)
-     * - NRF_PDM_EDGE_LEFTRISING Left (or mono) is sampled on rising edge of PDM_CLK.
-	 *
-	 */
-	Microphone_PDM &withEdge(nrf_pdm_edge_t edge) { this->edge = edge; return *this; };
-#endif
-
-
 protected:
 	/**
 	 * @brief Allocate a Microphone_PDM object for using the hardware PDM decoder
@@ -330,7 +331,6 @@ protected:
      * This class is a singleton and cannot be copied
      */
     Microphone_PDM& operator=(const Microphone_PDM&) = delete;
-
 
 	/**
 	 * @brief Singleton instance of this class

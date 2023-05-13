@@ -73,6 +73,9 @@ protected:
 
 
 protected:
+	/**
+	 * @brief Since the RTL872x cannot stop DMA, this is used to handle start() and stop().
+	 */
 	bool running = false;
 
 };

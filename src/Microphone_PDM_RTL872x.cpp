@@ -46,10 +46,18 @@ int Microphone_PDM_RTL872x::stop() {
 
 
 bool Microphone_PDM_RTL872x::samplesAvailable() const {
+    if (!running) {
+        return false;
+    }
+
 	return (dmic_ready() != NULL);
 }
 
 bool Microphone_PDM_RTL872x::copySamples(void*pSamples) {
+    if (!running) {
+        return false;
+    }
+
     int16_t *src = (int16_t *)dmic_ready();
 	if (src) {
 		copySamplesInternal(src, pSamples);
@@ -62,6 +70,10 @@ bool Microphone_PDM_RTL872x::copySamples(void*pSamples) {
 }
 
 bool Microphone_PDM_RTL872x::noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback) {
+    if (!running) {
+        return false;
+    }
+
     int16_t *src = (int16_t *)dmic_ready();
 	if (src) {
 		copySamplesInternal(src, src);
