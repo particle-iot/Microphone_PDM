@@ -68,6 +68,35 @@ int Microphone_PDM_nRF52::stop() {
 }
 
 
+bool Microphone_PDM_nRF52::samplesAvailable() const {
+	return (currentSampleAvailable != NULL);
+}
+
+bool Microphone_PDM_nRF52::copySamples(void*pSamples) {
+	if (currentSampleAvailable) {
+		copySamplesInternal(currentSampleAvailable, pSamples, BUFFER_SIZE_SAMPLES);
+		currentSampleAvailable = NULL;
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool Microphone_PDM_nRF52::noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback) {
+	if (currentSampleAvailable) {
+		copySamplesInternal(currentSampleAvailable, currentSampleAvailable, BUFFER_SIZE_SAMPLES);
+		callback(currentSampleAvailable, BUFFER_SIZE_SAMPLES);
+		currentSampleAvailable = NULL;
+		return true;
+	}
+	else {
+		return false;
+	}
+
+}
+
+
 void Microphone_PDM_nRF52::dataHandler(nrfx_pdm_evt_t const * const pEvent) {
 	/*
  	bool             buffer_requested;  ///< Buffer request flag.
@@ -77,52 +106,13 @@ void Microphone_PDM_nRF52::dataHandler(nrfx_pdm_evt_t const * const pEvent) {
 
 	if (pEvent->buffer_released) {
 		// Adjust samples here
-		int16_t *src = (int16_t *)pEvent->buffer_released;
-
-		if (outputSize == OutputSize::UNSIGNED_8) {
-			uint8_t *dst = (uint8_t *)src;
-
-			// Scale the 16-bit signed values to an appropriate range for unsigned 8-bit values
-			int16_t div = (int16_t)(1 << (size_t) range);
-
-			for(size_t ii = 0; ii < BUFFER_SIZE_SAMPLES; ii++) {
-				int16_t val = src[ii] / div;
-
-				// Clip to signed 8-bit
-				if (val < -128) {
-					val = -128;
-				}
-				if (val > 127) {
-					val = 127;
-				}
-
-				// Add 128 to make unsigned 8-bit (offset)
-				dst[ii] = (uint8_t) (val + 128);
-			}
-
-		}
-		else
-		if (outputSize == OutputSize::SIGNED_16) {
-			int32_t mult = (int32_t)(1 << (8 - (size_t) range));
-			for(size_t ii = 0; ii < BUFFER_SIZE_SAMPLES; ii++) {
-				// Scale to signed 16 bit range
-				int32_t val = (int32_t)src[ii] * mult;
-
-				// Clip to signed 16-bit
-				if (val < -32767) {
-					val = -32767;
-				}
-				if (val > 32768) {
-					val = 32868;
-				}
-
-				src[ii] = (int16_t) val;
-			}
-		}
-		availableSamples = src;
+		int16_t *src = (int16_t *)pEvent->buffer_released;;
 
 		if (interruptCallback) {
 			interruptCallback(src, BUFFER_SIZE_SAMPLES);
+		}
+		else {
+			currentSampleAvailable = src;
 		}
 	}
 

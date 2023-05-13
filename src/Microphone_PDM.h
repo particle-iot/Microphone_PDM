@@ -40,6 +40,14 @@ protected:
 	Microphone_PDM_Base() {};
 	virtual ~Microphone_PDM_Base() {};
 
+	/**
+	 * @brief Used internally. Use copySamples() externally
+	 * 
+	 * @param src 
+	 * @param dst 
+	 */
+	void copySamplesInternal(const int16_t *src, void *dst, size_t numSamples) const;
+
 
 	pin_t clkPin = A0;		//!< The pin used for the PDM clock (output)
 	pin_t datPin = A1;		//!< The pin used for the PDM data (input)
@@ -220,9 +228,14 @@ public:
 	 * You can skip calling samplesAvailable() and just call copySamples which will return false in the same cases
 	 * where samplesAvailable() would have returned false.
 	 */
-	bool copySamples(void*pSamples) const {
+	bool copySamples(void*pSamples) {
 		return Microphone_PDM_MCU::copySamples(pSamples);
 	}
+
+	bool noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback) {
+		return Microphone_PDM_MCU::noCopySamples(callback);
+	}
+
 
 #if 0
 	/**
@@ -274,6 +287,7 @@ public:
 	Microphone_PDM &withEdge(nrf_pdm_edge_t edge) { this->edge = edge; return *this; };
 #endif
 
+#if 0
 	/**
 	 * @brief Call this to poll for available samples from loop()
 	 *
@@ -294,7 +308,7 @@ public:
 	 * @brief Returns the number of samples (not bytes) that was returned from getAvailableSamples()
 	 */
 	size_t getSamplesPerBuf() const { return BUFFER_SIZE_SAMPLES; };
-
+#endif
 
 protected:
 	/**
@@ -317,14 +331,6 @@ protected:
      * This class is a singleton and cannot be copied
      */
     Microphone_PDM& operator=(const Microphone_PDM&) = delete;
-
-	/**
-	 * @brief Used internally. Use copySamples() externally
-	 * 
-	 * @param src 
-	 * @param dst 
-	 */
-	void copySamplesInternal(const int16_t *src, void *dst);
 
 
 	/**

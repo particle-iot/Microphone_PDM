@@ -41,13 +41,13 @@ Microphone_PDM &Microphone_PDM::withGainDb(float gain) {
 }
 #endif
 
-void Microphone_PDM::copySamplesInternal(const int16_t *src, void *dst) {
+void Microphone_PDM_Base::copySamplesInternal(const int16_t *src, void *dst, size_t numSamples) const {
 	if (outputSize == OutputSize::UNSIGNED_8) {
 
 		// Scale the 16-bit signed values to an appropriate range for unsigned 8-bit values
 		int16_t div = (int16_t)(1 << (size_t) range);
 
-		for(size_t ii = 0; ii < BUFFER_SIZE_SAMPLES; ii++) {
+		for(size_t ii = 0; ii < numSamples; ii++) {
 			int16_t val = src[ii] / div;
 
 			// Clip to signed 8-bit
@@ -66,7 +66,7 @@ void Microphone_PDM::copySamplesInternal(const int16_t *src, void *dst) {
 	else if (outputSize == OutputSize::SIGNED_16) {		
 		int32_t mult = (int32_t)(1 << (8 - (size_t) range));
 
-		for(size_t ii = 0; ii < BUFFER_SIZE_SAMPLES; ii++) {
+		for(size_t ii = 0; ii < numSamples; ii++) {
 			// Scale to signed 16 bit range
 			int32_t val = (int32_t)src[ii] * mult;
 
@@ -83,23 +83,11 @@ void Microphone_PDM::copySamplesInternal(const int16_t *src, void *dst) {
 	}
 	else {
 		// OutputSize::RAW_SIGNED_16
-		int32_t mult = (int32_t)(1 << (8 - (size_t) range));
-
-		for(size_t ii = 0; ii < BUFFER_SIZE_SAMPLES; ii++) {
-			// Scale to signed 16 bit range
-			int32_t val = (int32_t)src[ii] * mult;
-
-			// Clip to signed 16-bit
-			if (val < -32767) {
-				val = -32767;
+		if (src != dst) {
+			for(size_t ii = 0; ii < numSamples; ii++) {
+				((int16_t *)dst)[ii] = src[ii];
 			}
-			if (val > 32768) {
-				val = 32868;
-			}
-
-			((int16_t *)dst)[ii] = (int16_t) val;
 		}
-
 	}
 }
 

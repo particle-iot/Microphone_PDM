@@ -48,7 +48,7 @@ protected:
 	 * @return true 
 	 * @return false 
 	 */
-	bool samplesAvailable() const {
+	virtual bool samplesAvailable() const {
         return false;
 	}
 
@@ -66,12 +66,13 @@ protected:
 	 * You can skip calling samplesAvailable() and just call copySamples which will return false in the same cases
 	 * where samplesAvailable() would have returned false.
 	 */
-	bool copySamples(void* pSamples) const {
+	virtual bool copySamples(void* pSamples) const {
         return false;
 	}
 
 	
-    
+    virtual bool noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback);
+
 };
 
 /**

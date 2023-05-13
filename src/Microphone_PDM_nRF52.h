@@ -47,9 +47,7 @@ protected:
 	 * @return true 
 	 * @return false 
 	 */
-	bool samplesAvailable() const {
-        return false;
-	}
+	virtual bool samplesAvailable() const;
 
 	/**
 	 * @brief Copy samples from the DMA buffer to your buffer
@@ -65,9 +63,10 @@ protected:
 	 * You can skip calling samplesAvailable() and just call copySamples which will return false in the same cases
 	 * where samplesAvailable() would have returned false.
 	 */
-	bool copySamples(void* pSamples) const {
-        return false;
-	}
+	virtual bool copySamples(void* pSamples);
+
+
+	virtual bool noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback);
 
 private:
 	/**
@@ -87,6 +86,8 @@ private:
 	nrf_pdm_gain_t gainR = NRF_PDM_GAIN_DEFAULT; 	//!< 0x28 = 0dB gain
 	nrf_pdm_freq_t freq = NRF_PDM_FREQ_1032K;		//!< clock frequency
 	nrf_pdm_edge_t edge = NRF_PDM_EDGE_LEFTFALLING; //!< clock edge configuration
+
+	int16_t *currentSampleAvailable = NULL;
 
 	int16_t samples[BUFFER_SIZE_SAMPLES * NUM_BUFFERS];
 };

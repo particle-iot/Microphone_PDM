@@ -56,7 +56,6 @@ void setup() {
 }
 
 void loop() {
-	uint8_t *samples;
 
 	switch(state) {
 	case STATE_WAITING:
@@ -82,16 +81,9 @@ void loop() {
 		break;
 
 	case STATE_RUNNING:
-		samples = (uint8_t *)Microphone_PDM::instance().getAvailableSamples();
-
-		if (samples) {
-			size_t numSamples = Microphone_PDM::instance().getSamplesPerBuf();
-
-			client.write(samples, numSamples);
-
-			Microphone_PDM::instance().doneWithSamples();
-		}
-
+		Microphone_PDM::instance().noCopySamples([](void *pSamples, size_t numSamples) {
+			client.write((const uint8_t *)pSamples, numSamples);
+		});
 
 		if (millis() - recordingStart >= MAX_RECORDING_LENGTH_MS) {
 			state = STATE_FINISH;
