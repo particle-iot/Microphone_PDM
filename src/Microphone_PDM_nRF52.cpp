@@ -2,7 +2,7 @@
 
 #if HAL_PLATFORM_NRF52840 
 
-#include "Microphone_PDM_nRF52.h"
+#include "Microphone_PDM.h"
 
 Microphone_PDM_nRF52::Microphone_PDM_nRF52() {
 
@@ -28,7 +28,7 @@ int Microphone_PDM_nRF52::init() {
 	nrfx_pdm_config_t config = NRFX_PDM_DEFAULT_CONFIG(nrfClkPin, nrfDatPin);
 
 	// Override with everything we have local copies of
-	config.mode = mode;
+	config.mode = stereoMode ? NRF_PDM_MODE_STEREO : NRF_PDM_MODE_MONO;
 	config.clock_freq = freq;
 	config.edge = edge;
 	config.gain_l = gainL;
@@ -141,9 +141,7 @@ void Microphone_PDM_nRF52::dataHandler(nrfx_pdm_evt_t const * const pEvent) {
 
 // [static]
 void Microphone_PDM_nRF52::dataHandlerStatic(nrfx_pdm_evt_t const * const pEvent) {
-	if (instance) {
-		instance->dataHandler(pEvent);
-	}
+	Microphone_PDM::instance().dataHandler(pEvent);
 }
 
 

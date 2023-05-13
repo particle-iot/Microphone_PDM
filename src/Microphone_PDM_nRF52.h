@@ -3,7 +3,7 @@
 #include "nrfx_pdm.h"
 
 
-class Microphone_PDM_nRF52 
+class Microphone_PDM_nRF52  : public Microphone_PDM_Base
 {
 public:
     static const size_t BUFFER_SIZE_SAMPLES = 512; //!< 1024 bytes per buffer
@@ -82,8 +82,14 @@ private:
 	 * however that's also the case because there is only one PDM peripheral on the nRF52.
 	 */
 	static void dataHandlerStatic(nrfx_pdm_evt_t const * const pEvent);
-};
 
+	nrf_pdm_gain_t gainL = NRF_PDM_GAIN_DEFAULT; 	//!< 0x28 = 0dB gain
+	nrf_pdm_gain_t gainR = NRF_PDM_GAIN_DEFAULT; 	//!< 0x28 = 0dB gain
+	nrf_pdm_freq_t freq = NRF_PDM_FREQ_1032K;		//!< clock frequency
+	nrf_pdm_edge_t edge = NRF_PDM_EDGE_LEFTFALLING; //!< clock edge configuration
+
+	int16_t samples[BUFFER_SIZE_SAMPLES * NUM_BUFFERS];
+};
 
 /**
  * @brief Microphone_PDM_MCU is an alias for the MCU-specific class like Microphone_PDM_nRF52

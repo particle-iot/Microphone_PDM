@@ -1,7 +1,6 @@
 #pragma once
 
-
-class Microphone_PDM_RTL872x 
+class Microphone_PDM_RTL872x : public Microphone_PDM_Base
 {
 public:
     static const size_t BUFFER_SIZE_SAMPLES = 256; //!< 512 bytes per buffer
@@ -70,6 +69,8 @@ protected:
 	bool copySamples(void* pSamples) const {
         return false;
 	}
+
+	
     
 };
 

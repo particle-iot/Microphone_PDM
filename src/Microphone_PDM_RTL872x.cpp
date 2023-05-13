@@ -2,7 +2,7 @@
 
 #if defined(HAL_PLATFORM_RTL872X) && HAL_PLATFORM_RTL872X
 
-#include "Microphone_PDM_RTL872x.h"
+#include "Microphone_PDM.h"
 
 Microphone_PDM_RTL872x::Microphone_PDM_RTL872x() {
 
