@@ -68,6 +68,16 @@ protected:
 
 	virtual bool noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback);
 
+	/**
+	 * @brief Get the Number Of Samples object
+	 * 
+	 * @return size_t 
+	 */
+	size_t getNumberOfSamples() const {
+		return BUFFER_SIZE_SAMPLES;
+	}
+
+
 private:
 	/**
 	 * @brief Used internally to handle notifications from the PDM peripheral
@@ -88,6 +98,7 @@ private:
 	nrf_pdm_edge_t edge = NRF_PDM_EDGE_LEFTFALLING; //!< clock edge configuration
 
 	int16_t *currentSampleAvailable = NULL;
+	bool useBufferA = true;							//!< Which buffer we're reading from of the double buffers
 
 	int16_t samples[BUFFER_SIZE_SAMPLES * NUM_BUFFERS];
 };

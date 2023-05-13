@@ -52,17 +52,9 @@ protected:
 	pin_t clkPin = A0;		//!< The pin used for the PDM clock (output)
 	pin_t datPin = A1;		//!< The pin used for the PDM data (input)
 	bool stereoMode = false;	//!< Use stereo mode (default: false, mono mode)
-#if 0
-	nrf_pdm_gain_t gainL = NRF_PDM_GAIN_DEFAULT; 	//!< 0x28 = 0dB gain
-	nrf_pdm_gain_t gainR = NRF_PDM_GAIN_DEFAULT; 	//!< 0x28 = 0dB gain
-	nrf_pdm_freq_t freq = NRF_PDM_FREQ_1032K;		//!< clock frequency
-	nrf_pdm_edge_t edge = NRF_PDM_EDGE_LEFTFALLING; //!< clock edge configuration
-#endif
+	int sampleRate; //!< Either 8000 or 16000 only!
 	OutputSize outputSize = OutputSize::SIGNED_16;	//!< Output size (8 or 16 bits)
 	Range range = Range::RANGE_2048;				//!< Range adjustment factor
-	std::function<void(void *sampleBuf, size_t numSamples)> interruptCallback = NULL;	//!< buffer completion callback
-	bool useBufferA = true;							//!< Which buffer we're reading from of the double buffers
-	int16_t *availableSamples = NULL;				//!< Used to pass data to loop() for processing out of interrupt context
 
 };
 
@@ -147,12 +139,6 @@ public:
 	Microphone_PDM &withRange(Range range) { this->range = range; return *this; };
 
 	/**
-	 * @brief Sets a callback function to be called at interrupt time
-	 */
-	Microphone_PDM &withInterruptCallback(std::function<void(void *sampleBuf, size_t numSamples)> interruptCallback) { this->interruptCallback = interruptCallback; return *this; };
-
-
-	/**
 	 * @brief Initialize the PDM module.
 	 *
 	 * This is often done from setup(). You can defer it until you're ready to sample if desired,
@@ -214,8 +200,9 @@ public:
 	 * 2 buffers used on the nRF52, and the optimal DMA size on the RTL872x is 512 bytes.
 	 */
 	size_t getNumberOfSamples() const {
-		return Microphone_PDM_MCU::BUFFER_SIZE_SAMPLES;
+		return Microphone_PDM_MCU::getNumberOfSamples();
 	}
+
 
 	/**
 	 * @brief Copy samples from the DMA buffer to your buffer
@@ -236,6 +223,12 @@ public:
 		return Microphone_PDM_MCU::noCopySamples(callback);
 	}
 
+	/**
+	 * @brief Sets the sampling sampleRate.  Default is 16000. Can be set to 8000. Other values not supported.
+	 *
+	 * @param sampleRate 8000 or 16000. The default is 16000.
+	 */
+	Microphone_PDM &withSampleRate(int sampleRate) { this->sampleRate = sampleRate; return *this; };
 
 #if 0
 	/**
@@ -258,23 +251,6 @@ public:
 	 */
 	Microphone_PDM &withGain(nrf_pdm_gain_t gainL, nrf_pdm_gain_t gainR) { this->gainL = gainL; this->gainR = gainR; return *this; };
 
-
-	/**
-	 * @brief Set stereo mode/mono mode. Default is mono.
-	 * 
-	 * @param useStereo Use stereo mode if true. Use mono mode if false.
-	 * 
-	 * In stereo mode, each buffer will interleave L and R samples. Default is mono mode, and every sample is for the single channel.
-	 */
-	Microphone_PDM &withStereoMode(bool useStereo = true) { this->stereoMode = useStereo; return *this; };
-
-	/**
-	 * @brief Sets the sampling frequency.  Default is 1.032 MHz, which works out to be a PCM sample rate of 16125 samples/sec.
-	 *
-	 * @param freq Sampling frequency: NRF_PDM_FREQ_1000K, NRF_PDM_FREQ_1032K (default), or NRF_PDM_FREQ_1067K
-	 */
-	Microphone_PDM &withFreq(nrf_pdm_freq_t freq) { this->freq = freq; return *this; };
-
 	/**
 	 * @brief Sets the edge mode
 	 *
@@ -287,28 +263,6 @@ public:
 	Microphone_PDM &withEdge(nrf_pdm_edge_t edge) { this->edge = edge; return *this; };
 #endif
 
-#if 0
-	/**
-	 * @brief Call this to poll for available samples from loop()
-	 *
-	 * @return A point to a sample buffer or NULL if no samples are available
-	 *
-	 * Be sure to call doneWithSamples() if a non-NULL value is returned!
-	 */
-	void *getAvailableSamples() const { return (void *)availableSamples; };
-
-	/**
-	 * @brief Call when you are done using the samples returns from getAvailableSamples(). Required!
-	 *
-	 * This allows the buffer to be reused. If you don't call this, data will be corrupted.
-	 */
-	void doneWithSamples() { availableSamples = NULL; };
-
-	/**
-	 * @brief Returns the number of samples (not bytes) that was returned from getAvailableSamples()
-	 */
-	size_t getSamplesPerBuf() const { return BUFFER_SIZE_SAMPLES; };
-#endif
 
 protected:
 	/**

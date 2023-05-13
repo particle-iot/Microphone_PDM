@@ -65,8 +65,12 @@ protected:
 	 */
 	virtual bool copySamples(void* pSamples);
 	
-	
     virtual bool noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback);
+
+	size_t getNumberOfSamples() const {
+		return BUFFER_SIZE_SAMPLES;
+	}
+
 
 protected:
 	bool running = false;

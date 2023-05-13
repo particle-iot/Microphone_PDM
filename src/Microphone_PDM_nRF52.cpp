@@ -96,6 +96,11 @@ bool Microphone_PDM_nRF52::noCopySamples(std::function<void(void *pSamples, size
 
 }
 
+size_t Microphone_PDM_nRF52::getNumberOfSamples() const {
+	return Microphone_PDM_MCU::BUFFER_SIZE_SAMPLES;
+}
+
+
 
 void Microphone_PDM_nRF52::dataHandler(nrfx_pdm_evt_t const * const pEvent) {
 	/*
@@ -105,15 +110,7 @@ void Microphone_PDM_nRF52::dataHandler(nrfx_pdm_evt_t const * const pEvent) {
 	 */
 
 	if (pEvent->buffer_released) {
-		// Adjust samples here
-		int16_t *src = (int16_t *)pEvent->buffer_released;;
-
-		if (interruptCallback) {
-			interruptCallback(src, BUFFER_SIZE_SAMPLES);
-		}
-		else {
-			currentSampleAvailable = src;
-		}
+		currentSampleAvailable = (int16_t *)pEvent->buffer_released;;
 	}
 
 	if (pEvent->buffer_requested) {
