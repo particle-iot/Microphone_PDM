@@ -74,7 +74,7 @@ bool Microphone_PDM_nRF52::samplesAvailable() const {
 
 bool Microphone_PDM_nRF52::copySamples(void*pSamples) {
 	if (currentSampleAvailable) {
-		copySamplesInternal(currentSampleAvailable, pSamples);
+		copySamplesInternal(currentSampleAvailable, (uint8_t *)pSamples);
 		currentSampleAvailable = NULL;
 		return true;
 	}

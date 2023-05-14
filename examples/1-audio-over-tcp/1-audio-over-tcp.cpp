@@ -2,6 +2,7 @@
 
 
 SYSTEM_THREAD(ENABLED);
+SYSTEM_MODE(SEMI_AUTOMATIC);
 
 SerialLogHandler logHandler;
 
@@ -11,7 +12,7 @@ SerialLogHandler logHandler;
 const unsigned long MAX_RECORDING_LENGTH_MS = 30000;
 
 // This is the IP Address and port that the server.js node server is running on.
-IPAddress serverAddr = IPAddress(192,168,2,4); // **UPDATE THIS**
+IPAddress serverAddr = IPAddress(192,168,2,6); // **UPDATE THIS**
 int serverPort = 7123;
 
 TCPClient client;
@@ -25,6 +26,8 @@ void buttonHandler(system_event_t event, int data);
 
 
 void setup() {
+	Particle.connect();
+
 	// Register handler to handle clicking on the SETUP button
 	System.on(button_click, buttonHandler);
 
@@ -32,7 +35,7 @@ void setup() {
 	pinMode(D7, OUTPUT);
 
 	// Optional, just for testing so I can see the logs below
-	waitFor(Serial.isConnected, 10000);
+	// waitFor(Serial.isConnected, 10000);
 
 	// We want the samples converted to unsigned 8-bit, which is what we send over the wire.
 	// It's also the standard format for 8-bit wav files.
@@ -43,15 +46,17 @@ void setup() {
 	// unsigned 8 bit.
 	Microphone_PDM::instance().withRange(Microphone_PDM::Range::RANGE_2048);
 
+	// The default is 16000. You can optionally set it to 8000.
+	Microphone_PDM::instance().withSampleRate(16000);
 
 	int err = Microphone_PDM::instance().init();
 	if (err) {
-		Log.error("pdmDecoder.init err=%d", err);
+		Log.error("PDM decoder init err=%d", err);
 	}
 
 	err = Microphone_PDM::instance().start();
 	if (err) {
-		Log.error("pdmDecoder.start err=%d", err);
+		Log.error("PDM decoder start err=%d", err);
 	}
 
 }
@@ -105,7 +110,9 @@ void loop() {
 void buttonHandler(system_event_t event, int data) {
 	switch(state) {
 	case STATE_WAITING:
-		state = STATE_CONNECT;
+		if (WiFi.ready()) {
+			state = STATE_CONNECT;
+		}
 		break;
 
 	case STATE_RUNNING:
