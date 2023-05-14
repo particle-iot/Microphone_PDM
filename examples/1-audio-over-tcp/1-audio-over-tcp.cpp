@@ -10,8 +10,8 @@ SerialLogHandler logHandler;
 // off automatically. The limit really is only the disk space available to receive the file.
 const unsigned long MAX_RECORDING_LENGTH_MS = 30000;
 
-// This is the IP Address and port that the audioServer.js node server is running on.
-IPAddress serverAddr = IPAddress(192,168,2,4);
+// This is the IP Address and port that the server.js node server is running on.
+IPAddress serverAddr = IPAddress(192,168,2,4); // **UPDATE THIS**
 int serverPort = 7123;
 
 TCPClient client;
@@ -36,6 +36,7 @@ void setup() {
 
 	// We want the samples converted to unsigned 8-bit, which is what we send over the wire.
 	// It's also the standard format for 8-bit wav files.
+	// The other common value is Microphone_PDM::OutputSize::SIGNED_16.
 	Microphone_PDM::instance().withOutputSize(Microphone_PDM::OutputSize::UNSIGNED_8);
 
 	// My microphone makes samples from around -2048 to 2047, adjust that so it fits in

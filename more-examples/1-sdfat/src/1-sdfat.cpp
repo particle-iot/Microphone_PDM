@@ -19,11 +19,6 @@ SdFatSequentialFile sequentialFile(sd, SD_CHIP_SELECT, SPI_FULL_SPEED);
 // It's actually 16025. You could set that here if instead.
 SdFatWavWriter wavWriter(1, 16000, 16);
 
-// CLK = A2, DATA = A3 here, but you can use any available GPIO
-// Allocate a PDM decoder. You can only have one per device. In this case, it has 512 int16_t samples
-// for each of the double buffers, so this will use 2048 bytes of RAM.
-Microphone_PDMStatic<1024> pdmDecoder(A2, A3);
-
 // If you don't hit the setup button to stop recording, this is how long to go before turning it
 // off automatically. The limit really is only the disk space available to receive the file.
 const unsigned long MAX_RECORDING_LENGTH_MS = 5 * 60 * 1000;
@@ -54,28 +49,27 @@ void setup() {
 		.withDirName("audio")
 		.withNamePattern("%06d.wav");
 
-	pdmDecoder.withOutputSize(Microphone_PDM::OutputSize::SIGNED_16);
+	Microphone_PDM::instance().withOutputSize(Microphone_PDM::OutputSize::SIGNED_16);
 
 	// My microphone makes samples from around -2048 to 2047, adjust that so it
 	// uses more of the 16-bit range
-	pdmDecoder.withRange(Microphone_PDM::Range::RANGE_2048);
+	Microphone_PDM::instance().withRange(Microphone_PDM::Range::RANGE_2048);
 
 
-	nrfx_err_t err = pdmDecoder.init();
+	int err = Microphone_PDM::instance().init();
 	if (err) {
-		Log.error("pdmDecoder.init err=%lu", err);
+		Log.error("pdmDecoder.init err=%d", err);
 	}
 
-	err = pdmDecoder.start();
+	err = Microphone_PDM::instance().start();
 	if (err) {
-		Log.error("pdmDecoder.start err=%lu", err);
+		Log.error("pdmDecoder.start err=%d", err);
 	}
 
 }
 
 void loop() {
-	int16_t *samples;
-
+	
 	switch(state) {
 	case STATE_WAITING:
 		// Waiting for the user to press the SETUP button. The setup button handler
@@ -100,17 +94,9 @@ void loop() {
 		break;
 
 	case STATE_RUNNING:
-		samples = (int16_t *)pdmDecoder.getAvailableSamples();
-
-		if (samples) {
-			size_t numSamples = pdmDecoder.getSamplesPerBuf();
-
-			// The wav file is configured for signed 16-bit little endian samples already, so
-			// there no data translation required
-			curFile.write((uint8_t *)samples, 2 * numSamples);
-
-			pdmDecoder.doneWithSamples();
-		}
+		Microphone_PDM::instance().noCopySamples([](void *pSamples, size_t numSamples) {
+			curFile.write((uint8_t *)pSamples, Microphone_PDM::instance().getBufferSizeInBytes());
+		});
 
 
 		if (millis() - recordingStart >= MAX_RECORDING_LENGTH_MS) {
