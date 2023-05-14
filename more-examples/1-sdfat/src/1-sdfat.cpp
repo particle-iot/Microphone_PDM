@@ -8,12 +8,13 @@ SYSTEM_THREAD(ENABLED);
 SerialLogHandler logHandler;
 
 
-const int SD_CHIP_SELECT = A5;
+const int SD_CHIP_SELECT = A2;
 SdFat sd;
 PrintFile curFile;
 
 // This creates unique, sequentially numbered files on the SD card.
-SdFatSequentialFile sequentialFile(sd, SD_CHIP_SELECT, SPI_FULL_SPEED);
+SPISettings spiSettings(12 * MHZ, MSBFIRST, SPI_MODE0);
+SdFatSequentialFile sequentialFile(sd, SD_CHIP_SELECT, spiSettings);
 
 // This writes wav files to SD card
 // It's actually 16025. You could set that here if instead.
@@ -49,14 +50,12 @@ void setup() {
 		.withDirName("audio")
 		.withNamePattern("%06d.wav");
 
-	Microphone_PDM::instance().withOutputSize(Microphone_PDM::OutputSize::SIGNED_16);
+	int err = Microphone_PDM::instance()
+		.withOutputSize(Microphone_PDM::OutputSize::SIGNED_16)
+		.withRange(Microphone_PDM::Range::RANGE_2048)
+		.withSampleRate(16000)
+		.init();
 
-	// My microphone makes samples from around -2048 to 2047, adjust that so it
-	// uses more of the 16-bit range
-	Microphone_PDM::instance().withRange(Microphone_PDM::Range::RANGE_2048);
-
-
-	int err = Microphone_PDM::instance().init();
 	if (err) {
 		Log.error("pdmDecoder.init err=%d", err);
 	}

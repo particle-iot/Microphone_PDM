@@ -87,9 +87,8 @@ Microphone_PDM::instance().noCopySamples([](void *pSamples, size_t numSamples) {
 });
 ```
 
-An equivalent way would be to store the data in a temporary buffer. This is appropriate if you need to perform lengthier operations 
-or if your processing could block. Use the `copySamples()` method instead.
-
+An alternate way would be to store the data in a temporary buffer. Use the `copySamples()` method instead to store in multiple buffers in a queue if you need to do 
+lengthy blocking operations. Since the number of DMA buffers is small and fixed, copying to larger buffers is appropriate.
 
 
 ## Examples
@@ -100,7 +99,15 @@ This example sends the data as 16000 Hz, mono, 8-bit data over TCP to a node.js 
 
 - examples/1-audio-over-tcp
 
+Be sure to modify the IP address of your server in this line. Note the separate is comma, not a dot, like a normal IP address.
+
+```cpp
+IPAddress serverAddr = IPAddress(192,168,2,6); // **UPDATE THIS**
+```
+
 When you press the MODE button the transmission will begin and the blue D7 LED will turn on. The recording will go for 30 seconds, or until you press the MODE button again. 
+
+On the Photon 2, the status LED will turn green and blink a few times, this is normal because a single press of the MODE button also does a signal strength check like cellular devices.
 
 You could easily modify the code to record longer, even indefinitely. It likely will not work  with a Boron over cellular as there is no compression of the data and the data rate is too high. It won't work with a Xenon over mesh because TCP is not supported on a mesh-only node, and also the data rate is too high.
 
@@ -126,8 +133,9 @@ When you press the MODE button this example records audio to a SD card. Pressing
 This example requires a lot of parts:
 
 - A compatible Particle devices
-- SD card reader (connected by SPI)
+- 3.3V compatible SD card reader (connected by SPI)
 - PDM microphone
+
 
 ## Version History
 
