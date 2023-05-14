@@ -42,9 +42,10 @@ console.log('listening on port ' + dataPort);
 
 // If changing the sample frequency in the Particle code, make sure you change this!
 var wavOpts = {
-	'channels': (argv.channels || 1),
-	'sampleRate': (argv.rate || 16000),
-	'bitDepth': (argv.bits || 16),
+	channels: (argv.channels || 1),
+	sampleRate: (argv.rate || 16000),
+	bitDepth: (argv.bits || 16),
+	wireIsUnsigned16: false, // sample app uses unsigned 8 and signed 16, like wav file format, so this is typically false
 };
 console.log('configuration', wavOpts);
 
@@ -74,12 +75,9 @@ net.createServer(function (socket) {
 	
 	socket.on('data', function (data) {
 		// We received data on this connection.
-		// var buf = Buffer.from(data, 'hex');
-		var buf = new Buffer(data, 'hex');
-		
-		if (wavOpts.bitDepth == 16) {
-			// The Photon sends up unsigned data for both 8 and 16 bit
-			// The wav file format is unsigned for 8 bit and signed two-complement for 16-bit. Go figure.
+		var buf = Buffer.from(data, 'hex');
+	
+		if (wavOpts.bitDepth == 16 && wavOpts.wireIsUnsigned16) {
 			for(var ii = 0; ii < buf.length; ii += 2) {
 				var unsigned = buf.readUInt16LE(ii);
 				var signed = unsigned - 32768;

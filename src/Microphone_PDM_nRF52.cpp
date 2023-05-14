@@ -14,7 +14,11 @@ Microphone_PDM_nRF52::~Microphone_PDM_nRF52() {
 
 
 int Microphone_PDM_nRF52::init() {
+#if SYSTEM_VERSION >= SYSTEM_VERSION_v500
+	Hal_Pin_Info *pinMap = hal_pin_map();
+#else
 	Hal_Pin_Info *pinMap = HAL_Pin_Map();
+#endif
 
 	pinMode(clkPin, OUTPUT);
 	pinMode(datPin, INPUT);
@@ -41,7 +45,7 @@ int Microphone_PDM_nRF52::init() {
 }
 
 int Microphone_PDM_nRF52::uninit() {
-	availableSamples = NULL;
+	currentSampleAvailable = NULL;
 
 	nrfx_pdm_uninit();
 
@@ -52,7 +56,7 @@ int Microphone_PDM_nRF52::uninit() {
 
 int Microphone_PDM_nRF52::start() {
 	useBufferA = true;
-	availableSamples = NULL;
+	currentSampleAvailable = NULL;
 
 	nrfx_err_t err = nrfx_pdm_start();
 
@@ -60,7 +64,7 @@ int Microphone_PDM_nRF52::start() {
 }
 
 int Microphone_PDM_nRF52::stop() {
-	availableSamples = NULL;
+	currentSampleAvailable = NULL;
 
 	nrfx_err_t err = nrfx_pdm_stop();
 
@@ -86,7 +90,7 @@ bool Microphone_PDM_nRF52::copySamples(void*pSamples) {
 bool Microphone_PDM_nRF52::noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback) {
 	if (currentSampleAvailable) {
 		copySamplesInternal(currentSampleAvailable, (uint8_t *)currentSampleAvailable);
-		callback(currentSampleAvailable, BUFFER_SIZE_SAMPLES);
+		callback(currentSampleAvailable, getNumberOfSamples());
 		currentSampleAvailable = NULL;
 		return true;
 	}
@@ -97,17 +101,12 @@ bool Microphone_PDM_nRF52::noCopySamples(std::function<void(void *pSamples, size
 }
 
 size_t Microphone_PDM_nRF52::copySrcIncrement() const {
-	if (freq == 8000) {
+	if (sampleRate == 8000) {
 		return 2;
 	}
 	else {
 		return 1;
 	}
-}
-
-
-size_t Microphone_PDM_nRF52::getNumberOfSamples() const {
-	return Microphone_PDM_MCU::BUFFER_SIZE_SAMPLES;
 }
 
 
