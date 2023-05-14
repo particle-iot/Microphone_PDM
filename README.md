@@ -24,18 +24,20 @@ The pins needed for Adafruit PDM microphones are:
 | CLK | A0 | PDM Clock | Blue | 
 | DAT | A1 | PDM Data | Green | 
 
-![Breadboard](images/mic.jpg)
+![Photon 2](images/argon.jpg)
+
+![Argon](images/argon.jpg)
 
 - SEL - Left/Right select. If this pin is high, the output is on the falling edge of CLK considered the 'Right' channel. If this pin is low, the output is on the rising edge, a.k.a 'Left' channel. Has a pull-down to default to left so you can leave it unconnected.
 - CLK - PDM clock into breakout board, 1 - 3 MHz square wave required.
 - DAT - PDM data out of breakout board
 
-On the nRF52 (Boron, etc.) the PDM CLK and DATA lines are configurable to other pins, but on RTL872x (P2 and Photon 2), only A0 (CLK) and D1 (DATA) can be used.
+On the nRF52 (Boron, etc.) the PDM CLK and DAT lines are configurable to other pins, but on RTL872x (P2 and Photon 2), only A0 (CLK) and D1 (DAT) can be used.
 
 On both MCUs, the built-in hardware PDM decoder is used, along with DMA to write to the buffer, so the operation is 
 very efficient and does not block the execution of your code while sampling audio.
 
-On the RTL827x, once you start PDM sampling it cannot be stopped without resetting the MCU! You can, however, simply ignore the sampled data, which will be discarded and the sampling only generates minimal interrupts and uses minimal CPU.
+On the RTL827x, once you start PDM sampling it cannot be stopped without resetting the MCU! You can, however, simply ignore the sampled data, which will be discarded and the sampling only generates a minimal number of interrupts and uses minimal CPU.
 
 - Full [browsable API documentation](https://particle-iot.github.io/Microphone_PDM/)
 - Repository: https://github.com/particle-iot/Microphone_PDM
@@ -45,7 +47,7 @@ On the RTL827x, once you start PDM sampling it cannot be stopped without resetti
 
 ### Audio over TCP (8-bit)
 
-This example sends the data as 16000 Hz, mono, 8-bit data over TCP to a node.js server. The intention is to use this with an Argon over a local Wi-Fi network to a computer on the same network.
+This example sends the data as 16000 Hz, mono, 8-bit data over TCP to a node.js server. The intention is to use this with an Argon, P2, or Photon 2 over a local Wi-Fi network to a computer on the same network.
 
 - examples/1-audio-over-tcp
 
@@ -56,22 +58,15 @@ You could easily modify the code to record longer, even indefinitely. It likely 
 To run the server:
 
 ```
-cd server
+cd more-examples/tcp-audio-server
 npm install
-npm start
+node app.js --rate 16000 --bits 8
 ```
 
 When a client connects it creates a new file in the **out** directory. They're sequentially numbered and in wav format.
 
-Make sure you update the device firmware to specify the IP address of your node.js server!
+Make sure you update the device firmware to specify the IP address of your node.js server! It will be printed out when you start the server.
 
-### Audio over TCP (16-bit)
-
-This example is basically the same as the previous example but sends the data as 16000 Hz, mono, 16-bit instead of 8-bit. 
-
-- examples/2-audio-over-tcp-16bit
-
-The device firmware sends the data as raw PCM samples, so the server is also modified to generate the appropriate wav files.
 
 ### SdFat Wav 
 
@@ -81,12 +76,9 @@ When you press the MODE button this example records audio to a SD card. Pressing
 
 This example requires a lot of parts:
 
-- Gen 3 Particle Device (Argon, Boron, or Xenon)
+- A compatible Particle devices
 - SD card reader (connected by SPI)
 - PDM microphone
-
-![Breadboard](images/sdcard.jpg)
-
 
 ## Version History
 
