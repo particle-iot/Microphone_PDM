@@ -17,9 +17,15 @@ public:
     static const size_t NUM_BUFFERS = SP_DMA_PAGE_NUM;  //!< 4 buffers, so 2048 bytes total
 
 protected:
+	/**
+	 * @brief This object is constructed when the Microphone_PDM class singleton is instantiated
+	 */
     Microphone_PDM_RTL872x();
-    virtual ~Microphone_PDM_RTL872x();
 
+	/**
+	 * @brief This class is never deleted
+	 */
+    virtual ~Microphone_PDM_RTL872x();
 
 	/**
 	 * @brief Initialize the PDM module.

@@ -19,7 +19,14 @@ public:
 
 
 protected:
+	/**
+	 * @brief This object is constructed when the Microphone_PDM class singleton is instantiated
+	 */
     Microphone_PDM_nRF52();
+
+	/**
+	 * @brief This class is never deleted
+	 */
     virtual ~Microphone_PDM_nRF52();
 
 	/**
