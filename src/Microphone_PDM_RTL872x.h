@@ -103,9 +103,15 @@ protected:
     virtual bool noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback);
 
 	/**
-	 * @brief Get the number of samples in the DMA buffer
+	 * @brief Return the number of int16_t samples that copySamples will copy
 	 * 
-	 * @return size_t 
+	 * @return size_t Number of uint16_t samples. Number of bytes is twice that value
+	 * 
+	 * You will never get a partial buffer of data. The number of samples is a constant
+	 * that is determined by the MCU type at compile time and does not change. 
+	 * 
+	 * On the RTL872x, it's 256 samples (512 bytes). It's smaller because the are 4 buffers instead of the
+	 * 2 buffers used on the nRF52, and the optimal DMA size on the RTL872x is 512 bytes.
 	 */
 	size_t getNumberOfSamples() const {
 		return BUFFER_SIZE_SAMPLES;

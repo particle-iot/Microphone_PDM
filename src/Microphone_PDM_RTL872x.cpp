@@ -60,7 +60,7 @@ bool Microphone_PDM_RTL872x::copySamples(void*pSamples) {
 
     int16_t *src = (int16_t *)dmic_ready();
 	if (src) {
-		copySamplesInternal(src, pSamples);
+		copySamplesInternal(src, (uint8_t *)pSamples);
         dmic_read(NULL, 0);
 		return true;
 	}
@@ -76,7 +76,7 @@ bool Microphone_PDM_RTL872x::noCopySamples(std::function<void(void *pSamples, si
 
     int16_t *src = (int16_t *)dmic_ready();
 	if (src) {
-		copySamplesInternal(src, src);
+		copySamplesInternal(src, (uint8_t *)src);
 		callback(src, BUFFER_SIZE_SAMPLES);
         dmic_read(NULL, 0);
 		return true;

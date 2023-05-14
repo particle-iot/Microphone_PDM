@@ -85,7 +85,7 @@ bool Microphone_PDM_nRF52::copySamples(void*pSamples) {
 
 bool Microphone_PDM_nRF52::noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback) {
 	if (currentSampleAvailable) {
-		copySamplesInternal(currentSampleAvailable, currentSampleAvailable);
+		copySamplesInternal(currentSampleAvailable, (uint8_t *)currentSampleAvailable);
 		callback(currentSampleAvailable, BUFFER_SIZE_SAMPLES);
 		currentSampleAvailable = NULL;
 		return true;
@@ -95,6 +95,16 @@ bool Microphone_PDM_nRF52::noCopySamples(std::function<void(void *pSamples, size
 	}
 
 }
+
+size_t Microphone_PDM_nRF52::copySrcIncrement() const {
+	if (freq == 8000) {
+		return 2;
+	}
+	else {
+		return 1;
+	}
+}
+
 
 size_t Microphone_PDM_nRF52::getNumberOfSamples() const {
 	return Microphone_PDM_MCU::BUFFER_SIZE_SAMPLES;

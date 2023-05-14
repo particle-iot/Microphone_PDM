@@ -41,7 +41,7 @@ Microphone_PDM &Microphone_PDM::withGainDb(float gain) {
 }
 #endif
 
-size_t Microphone_PDM_Base::getSampleSizeInBytes() const {
+size_t Microphone_PDM::getSampleSizeInBytes() const {
 	switch(outputSize) {
 		case OutputSize::UNSIGNED_8:
 			return 1;
@@ -52,14 +52,19 @@ size_t Microphone_PDM_Base::getSampleSizeInBytes() const {
 }
 
 
-void Microphone_PDM_Base::copySamplesInternal(const int16_t *src, void *dst) const {
+void Microphone_PDM_Base::copySamplesInternal(const int16_t *src, uint8_t *dst) const {
+	const int16_t *srcEnd = &src[numSamples];
+
+	size_t increment = copySrcIncrement();
+
 	if (outputSize == OutputSize::UNSIGNED_8) {
 
 		// Scale the 16-bit signed values to an appropriate range for unsigned 8-bit values
 		int16_t div = (int16_t)(1 << (size_t) range);
 
-		for(size_t ii = 0; ii < numSamples; ii++) {
-			int16_t val = src[ii] / div;
+		while(src < srcEnd) {
+			int16_t val = *src / div;
+			src += increment;
 
 			// Clip to signed 8-bit
 			if (val < -128) {
@@ -70,16 +75,18 @@ void Microphone_PDM_Base::copySamplesInternal(const int16_t *src, void *dst) con
 			}
 
 			// Add 128 to make unsigned 8-bit (offset)
-			((uint8_t *)dst)[ii] = (uint8_t) (val + 128);
+			*((uint8_t *)dst) = (uint8_t) (val + 128);
+			dst += sizeof(uint8_t);
 		}
 
 	}
 	else if (outputSize == OutputSize::SIGNED_16) {		
 		int32_t mult = (int32_t)(1 << (8 - (size_t) range));
 
-		for(size_t ii = 0; ii < numSamples; ii++) {
+		while(src < srcEnd) {
 			// Scale to signed 16 bit range
-			int32_t val = (int32_t)src[ii] * mult;
+			int32_t val = (int32_t)*src * mult;
+			src += increment;
 
 			// Clip to signed 16-bit
 			if (val < -32767) {
@@ -89,14 +96,17 @@ void Microphone_PDM_Base::copySamplesInternal(const int16_t *src, void *dst) con
 				val = 32868;
 			}
 
-			((int16_t *)dst)[ii] = (int16_t) val;
+			*((int16_t *)dst) = (int16_t) val;
+			dst += sizeof(uint16_t);
 		}
 	}
 	else {
 		// OutputSize::RAW_SIGNED_16
-		if (src != dst) {
-			for(size_t ii = 0; ii < numSamples; ii++) {
-				((int16_t *)dst)[ii] = src[ii];
+		if (src != (int16_t *)dst || increment != 1) {
+			while(src < srcEnd) {
+				*((int16_t *)dst) = *src;
+				dst += sizeof(int16_t);
+				src += increment;
 			}
 		}
 	}

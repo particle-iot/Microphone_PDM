@@ -105,14 +105,33 @@ protected:
 	virtual bool noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback);
 
 	/**
-	 * @brief Get the number of samples in the DMA buffer
+	 * @brief Return the number of int16_t samples that copySamples will copy
 	 * 
-	 * @return size_t 
-	 */
+	 * @return size_t Number of uint16_t samples. Number of bytes is twice that value
+	 * 
+	 * You will never get a partial buffer of data. The number of samples is a constant
+	 * that is determined by the MCU type at compile time and does not change. 
+	 * 
+	 * On the nRF52, it's 512 samples (1024 bytes), except in one case: If you set a sample rate of
+	 * 8000 Hz, it will be 256 samples because the hardware only samples at 16000 Hz but the code
+	 * will automatically discard every other sample so there will only be 256 samples.
+	 */	
 	size_t getNumberOfSamples() const {
-		return BUFFER_SIZE_SAMPLES;
+		return BUFFER_SIZE_SAMPLES / copySrcIncrement();
 	}
 
+protected:
+	/**
+	 * @brief How much to increment src in copySamplesInternal. Used internally.
+	 * 
+	 * @return size_t number of bytes
+	 * 
+	 * This is almost always 1. The exception is if you are using 8000 Hz sampling on the nRF52. In this case,
+	 * every other sample is skipped and the subclass overrides this to return 2.
+	 * 
+	 * Override of virtual method in base class Microphone_PDM_Base
+	 */
+	size_t copySrcIncrement() const;
 
 private:
 	/**

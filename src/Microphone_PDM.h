@@ -37,34 +37,7 @@ public:
 		RANGE_32768, 	//!< From -32768 to 32767 (16 bits) (same as raw mode)
 	};
 
-	/**
-	 * @brief Return the number of samples (not bytes!) in the DMA buffer
-	 * 
-	 * @return size_t 
-	 * 
-	 * You can use this with copySamples() to know how big of a buffer you need.
-	 */
-	size_t getNumSamples() const { return numSamples; };
 
-	/**
-	 * @brief Get the sample size in bytes
-	 * 
-	 * @return size_t 1 (8-bit samples) or 2 (16-bit samples)
-	 * 
-	 */
-	size_t getSampleSizeInBytes() const;
-
-	/**
-	 * @brief Get the buffer size in bytes
-	 * 
-	 * @return size_t Size of the DMA buffer in bytes
-	 * 
-	 * You can use this with copySamples() to know how big of a buffer you need if you are allocating a
-	 * buffer in bytes instead of samples.
-	 */
-	size_t getBufferSizeInBytes() const {
-		return getSampleSizeInBytes() * getNumSamples();
-	}
 
 protected:
 	/**
@@ -90,7 +63,17 @@ protected:
 	 * 
 	 * src and dst can be the same buffer to transform the data range in place.
 	 */
-	void copySamplesInternal(const int16_t *src, void *dst) const;
+	void copySamplesInternal(const int16_t *src, uint8_t *dst) const;
+
+	/**
+	 * @brief How much to increment src in copySamplesInternal. Used internally.
+	 * 
+	 * @return size_t number of bytes
+	 * 
+	 * This is almost always 1. The exception is if you are using 8000 Hz sampling on the nRF52. In this case,
+	 * every other sample is skipped and the subclass overrides this to return 2.
+	 */
+	virtual size_t copySrcIncrement() const { return 1; };
 
 	pin_t clkPin = A0;		//!< The pin used for the PDM clock (output)
 	pin_t datPin = A1;		//!< The pin used for the PDM data (input)
@@ -260,7 +243,9 @@ public:
 	 * You will never get a partial buffer of data. The number of samples is a constant
 	 * that is determined by the MCU type at compile time and does not change. 
 	 * 
-	 * On the nRF52, it's 512 samples (1024 bytes).
+	 * On the nRF52, it's 512 samples (1024 bytes), except in one case: If you set a sample rate of
+	 * 8000 Hz, it will be 256 samples because the hardware only samples at 16000 Hz but the code
+	 * will automatically discard every other sample so there will only be 256 samples.
 	 * 
 	 * On the RTL872x, it's 256 samples (512 bytes). It's smaller because the are 4 buffers instead of the
 	 * 2 buffers used on the nRF52, and the optimal DMA size on the RTL872x is 512 bytes.
@@ -309,6 +294,26 @@ public:
 	bool noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback) {
 		return Microphone_PDM_MCU::noCopySamples(callback);
 	}
+
+	/**
+	 * @brief Get the sample size in bytes
+	 * 
+	 * @return size_t 1 (8-bit samples) or 2 (16-bit samples)
+	 */
+	size_t getSampleSizeInBytes() const;
+
+	/**
+	 * @brief Get the buffer size in bytes
+	 * 
+	 * @return size_t Size of the DMA buffer in bytes
+	 * 
+	 * You can use this with copySamples() to know how big of a buffer you need if you are allocating a
+	 * buffer in bytes instead of samples.
+	 */
+	size_t getBufferSizeInBytes() const {
+		return getSampleSizeInBytes() * getNumberOfSamples();
+	}
+
 
 protected:
 	/**
