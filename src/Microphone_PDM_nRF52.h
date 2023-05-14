@@ -3,6 +3,14 @@
 #include "nrfx_pdm.h"
 
 
+/**
+ * @brief MCU-specific implementation of PDM for the nRF52
+ * 
+ * This class is used on the Boron, B Series SoM, Tracker, and Argon.
+ * 
+ * You do not instantiate this class directly; it's automatically created when you use the 
+ * Microphone_PDM singleton.
+ */
 class Microphone_PDM_nRF52  : public Microphone_PDM_Base
 {
 public:
@@ -65,11 +73,32 @@ protected:
 	 */
 	virtual bool copySamples(void* pSamples);
 
-
+	
+	/**
+	 * @brief Alternative API to get samples
+	 *
+	 * @param callback Callback function or lambda
+	 *  
+	 * @return true 
+	 * @return false 
+	 * 
+	 * Alternative API that does not require a buffer to be passed in. You should only use this if you can
+	 * consume the buffer immediately without blocking. 
+	 * 
+	 * The callback function or lamba has this prototype:
+	 * 
+	 *   void callback(void *pSamples, size_t numSamples)
+	 * 
+	 * It will be called with a pointer to the samples (in the DMA buffer) and the number of samples (not bytes!) 
+	 * of data. The number of bytes will vary depending on the outputSize. 
+	 * 
+	 * You can skip calling samplesAvailable() and just call noCopySamples which will return false in the same cases
+	 * where samplesAvailable() would have returned false.
+	 */
 	virtual bool noCopySamples(std::function<void(void *pSamples, size_t numSamples)>callback);
 
 	/**
-	 * @brief Get the Number Of Samples object
+	 * @brief Get the number of samples in the DMA buffer
 	 * 
 	 * @return size_t 
 	 */

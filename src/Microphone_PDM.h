@@ -148,7 +148,7 @@ public:
 	/**
 	 * @brief Overrides the default data (DAT) pin (A1). Not supported on RTL872x (P2, Photon 2)!
 	 * 
-	 * @param clkPin Pin (such as A2, D3, etc.)
+	 * @param datPin Pin (such as A3, D4, etc.)
 	 * @return Microphone_PDM& 
 	 * 
 	 * This setting is only used on nRF52 and must be set before init().
