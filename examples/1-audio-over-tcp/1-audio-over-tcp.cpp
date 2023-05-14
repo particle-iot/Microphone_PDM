@@ -37,19 +37,19 @@ void setup() {
 	// Optional, just for testing so I can see the logs below
 	// waitFor(Serial.isConnected, 10000);
 
-	// We want the samples converted to unsigned 8-bit, which is what we send over the wire.
-	// It's also the standard format for 8-bit wav files.
-	// The other common value is Microphone_PDM::OutputSize::SIGNED_16.
-	Microphone_PDM::instance().withOutputSize(Microphone_PDM::OutputSize::UNSIGNED_8);
+	// output size is typically Microphone_PDM::OutputSize::UNSIGNED_8 or icrophone_PDM::OutputSize::SIGNED_16
+	// and must match what the server is expecting (set on the command line)
 
-	// My microphone makes samples from around -2048 to 2047, adjust that so it fits in
-	// unsigned 8 bit.
-	Microphone_PDM::instance().withRange(Microphone_PDM::Range::RANGE_2048);
+	// Range must match the microphone. The Adafruit PDM microphone is 12-bit, so Microphone_PDM::Range::RANGE_2048.
 
-	// The default is 16000. You can optionally set it to 8000.
-	Microphone_PDM::instance().withSampleRate(16000);
+	// The sample rate default to 16000. The other valid value is 8000.
 
-	int err = Microphone_PDM::instance().init();
+	int err = Microphone_PDM::instance()
+		.withOutputSize(Microphone_PDM::OutputSize::SIGNED_16)
+		.withRange(Microphone_PDM::Range::RANGE_2048)
+		.withSampleRate(16000)
+		.init();
+
 	if (err) {
 		Log.error("PDM decoder init err=%d", err);
 	}
@@ -88,7 +88,7 @@ void loop() {
 
 	case STATE_RUNNING:
 		Microphone_PDM::instance().noCopySamples([](void *pSamples, size_t numSamples) {
-			client.write((const uint8_t *)pSamples, numSamples);
+		    client.write((const uint8_t *)pSamples, Microphone_PDM::instance().getBufferSizeInBytes());
 		});
 
 		if (millis() - recordingStart >= MAX_RECORDING_LENGTH_MS) {

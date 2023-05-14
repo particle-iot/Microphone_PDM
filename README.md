@@ -43,6 +43,55 @@ On the RTL827x, once you start PDM sampling it cannot be stopped without resetti
 - Repository: https://github.com/particle-iot/Microphone_PDM
 - License: Apache 2 (Free for use. Can be used in closed-source commercial applications. No attribution required.)
 
+## Code
+
+### Initialization
+
+Typically you initialize the library like this:
+
+```cpp
+int err = Microphone_PDM::instance()
+    .withOutputSize(Microphone_PDM::OutputSize::UNSIGNED_8)
+    .withRange(Microphone_PDM::Range::RANGE_2048);
+    .withSampleRate(16000);
+    .init();
+```    
+
+- `withOutputSize` takes either:
+  - `Microphone_PDM::OutputSize::UNSIGNED_8` (unsigned 8-bit samples)
+  - `Microphone_PDM::OutputSize::SIGNED_16` (signed 16-bit samples)
+
+- `withRange` takes a range, which depends on the microphone. This is the right value for the Adafruit PDM microphone (12-bit, -2048 to +2047).
+
+- `withSampleRate` takes a sample rate, either 8000 or 16000. 
+
+- `init()` does the initialization using the specified settings.
+
+### Starting and stopping
+
+This can be done using `Microphone_PDM::instance().start()` and `Microphone_PDM::instance().stop()`.
+
+However, on RTL872x (P2 and Photon 2), the DMA doesn't really ever stop. These methods really only control whether the interrupt is 
+processed or skipped over, using little CPU. 
+
+### Reading samples
+
+While the code copies samples into double (nRF52) or quad (RTL872x) buffers using DMA, it's expected that you will do something with 
+the samples from loop() or from a worker thread. The two examples in this repository send the data over TCP, or save the data to a SD card.
+
+This is the TCP reading example from loop(). What it does is use the noCopySamples to avoid making an extra copy of the samples, then 
+
+```cpp
+Microphone_PDM::instance().noCopySamples([](void *pSamples, size_t numSamples) {
+    client.write((const uint8_t *)pSamples, Microphone_PDM::instance().getBufferSizeInBytes());
+});
+```
+
+An equivalent way would be to store the data in a temporary buffer. This is appropriate if you need to perform lengthier operations 
+or if your processing could block. Use the `copySamples()` method instead.
+
+
+
 ## Examples
 
 ### Audio over TCP (8-bit)
