@@ -24,9 +24,9 @@ The pins needed for Adafruit PDM microphones are:
 | CLK | A0 | PDM Clock | Blue | 
 | DAT | A1 | PDM Data | Green | 
 
-![Photon 2](images/argon.jpg)
+![Photon 2](images/photon2.png)
 
-![Argon](images/argon.jpg)
+![Argon](images/argon.png)
 
 - SEL - Left/Right select. If this pin is high, the output is on the falling edge of CLK considered the 'Right' channel. If this pin is low, the output is on the rising edge, a.k.a 'Left' channel. Has a pull-down to default to left so you can leave it unconnected.
 - CLK - PDM clock into breakout board, 1 - 3 MHz square wave required.
