@@ -1,6 +1,6 @@
 # Microphone_PDM
 
-*Library for PDM microphones for RTL872x and nRF52 (P2, Photon 2, Boron, B Series SoM, Tracker SoM, Argon*
+*Library for PDM microphones for RTL872x (P2, Photon 2) and nRF52 (Boron, B Series SoM, Tracker SoM, Argon)*
 
 Digital MEMS microphones are commonly available in I2S and PDM interface. This library only supports the 
 PDM ([pulse-density modulation](https://en.wikipedia.org/wiki/Pulse-density_modulation)) interface. 
