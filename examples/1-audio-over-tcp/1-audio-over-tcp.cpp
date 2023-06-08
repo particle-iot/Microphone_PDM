@@ -33,6 +33,7 @@ void setup() {
 
 	// Blue D7 LED indicates recording is on
 	pinMode(D7, OUTPUT);
+	digitalWrite(D7, LOW);
 
 	// Optional, just for testing so I can see the logs below
 	// waitFor(Serial.isConnected, 10000);
@@ -47,7 +48,7 @@ void setup() {
 	int err = Microphone_PDM::instance()
 		.withOutputSize(Microphone_PDM::OutputSize::SIGNED_16)
 		.withRange(Microphone_PDM::Range::RANGE_2048)
-		.withSampleRate(16000)
+		.withSampleRate(32000)
 		.init();
 
 	if (err) {

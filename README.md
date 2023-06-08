@@ -93,7 +93,7 @@ lengthy blocking operations. Since the number of DMA buffers is small and fixed,
 
 ## Examples
 
-### Audio over TCP (8-bit)
+### 1 - Audio over TCP
 
 This example sends the data as 16000 Hz, mono, 8-bit data over TCP to a node.js server. The intention is to use this with an Argon, P2, or Photon 2 over a local Wi-Fi network to a computer on the same network.
 
@@ -123,6 +123,15 @@ When a client connects it creates a new file in the **out** directory. They're s
 
 Make sure you update the device firmware to specify the IP address of your node.js server! It will be printed out when you start the server.
 
+### 2-buffer
+
+Illustrates buffered mode which captures the data for a fixed length of time (specified in milliseconds) then passes the 
+data at once to your code. Can be used with a callback function or lamba, or polled.
+
+### 3-wav
+
+Uses buffered mode, creates a wav file, and prints it to USB serial. You can capture this, convert it to binary, and
+play it with a regular wav player.
 
 ### SdFat Wav 
 

@@ -73,6 +73,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="#pro-static-attribs">Static Protected Attributes</a>  </div>
   <div class="headertitle"><div class="title">Microphone_PDM Class Reference</div></div>
 </div><!--header-->
@@ -113,6 +114,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6f4cca213ff55b01b4a73f196154dfd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e1d3318edf018b7e98ce91da3569f69"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microphone___p_d_m.html#a0e1d3318edf018b7e98ce91da3569f69">stop</a> ()</td></tr>
 <tr class="separator:a0e1d3318edf018b7e98ce91da3569f69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0eb25feea2c8c14088e54fc4111becf2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microphone___p_d_m.html#a0eb25feea2c8c14088e54fc4111becf2">loop</a> ()</td></tr>
+<tr class="separator:a0eb25feea2c8c14088e54fc4111becf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50941131933652d0e1464173fe3ad61e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microphone___p_d_m.html#a50941131933652d0e1464173fe3ad61e">bufferSamplingStart</a> (<a class="el" href="class_microphone___p_d_m___buffer_sampling.html">Microphone_PDM_BufferSampling</a> *<a class="el" href="class_microphone___p_d_m.html#a81e57e5ec463ad6e8c510f426d495c80">sampling</a>)</td></tr>
+<tr class="separator:a50941131933652d0e1464173fe3ad61e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73ca4e0264e37a36fa6f9406542abd03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microphone___p_d_m.html#a73ca4e0264e37a36fa6f9406542abd03">releaseBufferSampling</a> ()</td></tr>
+<tr class="separator:a73ca4e0264e37a36fa6f9406542abd03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4e64c5aa4a129f6d5691a0ae8b84a4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_microphone___p_d_m___buffer_sampling.html">Microphone_PDM_BufferSampling</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microphone___p_d_m.html#ab4e64c5aa4a129f6d5691a0ae8b84a4d">getSampling</a> ()</td></tr>
+<tr class="separator:ab4e64c5aa4a129f6d5691a0ae8b84a4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d0164f5c641fcad787320e0f308c4f3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microphone___p_d_m.html#a2d0164f5c641fcad787320e0f308c4f3">samplesAvailable</a> () const</td></tr>
 <tr class="separator:a2d0164f5c641fcad787320e0f308c4f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add0d8e9a9a35a9aba168cdcf4bc66fe6"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microphone___p_d_m.html#add0d8e9a9a35a9aba168cdcf4bc66fe6">getNumberOfSamples</a> () const</td></tr>
@@ -125,6 +134,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a13625cb6f5e80cbef1bf79d5315982d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2db86606901337d05ba830f68731caa"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microphone___p_d_m.html#ae2db86606901337d05ba830f68731caa">getBufferSizeInBytes</a> () const</td></tr>
 <tr class="separator:ae2db86606901337d05ba830f68731caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7b610834444ba4139e0a0e554ad3183"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microphone___p_d_m.html#af7b610834444ba4139e0a0e554ad3183">getNumChannels</a> () const</td></tr>
+<tr class="separator:af7b610834444ba4139e0a0e554ad3183"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a614f5f109028e53837b5444e3f0cc797"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microphone___p_d_m.html#a614f5f109028e53837b5444e3f0cc797">getSampleRate</a> () const</td></tr>
+<tr class="separator:a614f5f109028e53837b5444e3f0cc797"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c5dc3695cf36c440613f36a2fe1b7a2"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microphone___p_d_m.html#a9c5dc3695cf36c440613f36a2fe1b7a2">getBitsPerSample</a> () const</td></tr>
+<tr class="separator:a9c5dc3695cf36c440613f36a2fe1b7a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_class_microphone___p_d_m___base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_microphone___p_d_m___base')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_microphone___p_d_m___base.html">Microphone_PDM_Base</a></td></tr>
+<tr class="memitem:a2340fbc35b932c8041cb9bf661544ca4 inherit pub_methods_class_microphone___p_d_m___base"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microphone___p_d_m___base.html#a2340fbc35b932c8041cb9bf661544ca4">getSampleRate</a> () const</td></tr>
+<tr class="separator:a2340fbc35b932c8041cb9bf661544ca4 inherit pub_methods_class_microphone___p_d_m___base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -201,6 +219,37 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~Microphone_PDM_RT
 <tr class="memitem:a6a16c1be427230ff1a59bc5e0f88bc21 inherit pro_methods_class_microphone___p_d_m___r_t_l872x"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microphone___p_d_m___r_t_l872x.html#a6a16c1be427230ff1a59bc5e0f88bc21">getNumberOfSamples</a> () const</td></tr>
 <tr class="separator:a6a16c1be427230ff1a59bc5e0f88bc21 inherit pro_methods_class_microphone___p_d_m___r_t_l872x"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a81e57e5ec463ad6e8c510f426d495c80"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_microphone___p_d_m___buffer_sampling.html">Microphone_PDM_BufferSampling</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microphone___p_d_m.html#a81e57e5ec463ad6e8c510f426d495c80">sampling</a> = 0</td></tr>
+<tr class="separator:a81e57e5ec463ad6e8c510f426d495c80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_class_microphone___p_d_m___base"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_microphone___p_d_m___base')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_microphone___p_d_m___base.html">Microphone_PDM_Base</a></td></tr>
+<tr class="memitem:ad1b1982d02070201b0894bbd35ed2500 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memItemLeft" align="right" valign="top"><a id="ad1b1982d02070201b0894bbd35ed2500" name="ad1b1982d02070201b0894bbd35ed2500"></a>
+pin_t&#160;</td><td class="memItemRight" valign="bottom"><b>clkPin</b> = A0</td></tr>
+<tr class="separator:ad1b1982d02070201b0894bbd35ed2500 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2863d5149cf7de767600ef62fdc6809 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memItemLeft" align="right" valign="top"><a id="ad2863d5149cf7de767600ef62fdc6809" name="ad2863d5149cf7de767600ef62fdc6809"></a>
+pin_t&#160;</td><td class="memItemRight" valign="bottom"><b>datPin</b> = A1</td></tr>
+<tr class="separator:ad2863d5149cf7de767600ef62fdc6809 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e198278fe10da16fbe81523df52d1c9 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memItemLeft" align="right" valign="top"><a id="a8e198278fe10da16fbe81523df52d1c9" name="a8e198278fe10da16fbe81523df52d1c9"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>stereoMode</b> = false</td></tr>
+<tr class="separator:a8e198278fe10da16fbe81523df52d1c9 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7952d4b0bd76b309cbce53f0b606ff6a inherit pro_attribs_class_microphone___p_d_m___base"><td class="memItemLeft" align="right" valign="top"><a id="a7952d4b0bd76b309cbce53f0b606ff6a" name="a7952d4b0bd76b309cbce53f0b606ff6a"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>sampleRate</b></td></tr>
+<tr class="separator:a7952d4b0bd76b309cbce53f0b606ff6a inherit pro_attribs_class_microphone___p_d_m___base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b8d9df72eda515bbd3ac5243e9981c4 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memItemLeft" align="right" valign="top"><a id="a4b8d9df72eda515bbd3ac5243e9981c4" name="a4b8d9df72eda515bbd3ac5243e9981c4"></a>
+<a class="el" href="class_microphone___p_d_m___base.html#a486adb398afa4f7d58d64fac361e75b3">OutputSize</a>&#160;</td><td class="memItemRight" valign="bottom"><b>outputSize</b> = <a class="el" href="class_microphone___p_d_m___base.html#a486adb398afa4f7d58d64fac361e75b3a0967f1f9733a9ea490013af05f03e1cf">OutputSize::SIGNED_16</a></td></tr>
+<tr class="separator:a4b8d9df72eda515bbd3ac5243e9981c4 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a036c508777f47e8b1aeaf3e911a71c63 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memItemLeft" align="right" valign="top"><a id="a036c508777f47e8b1aeaf3e911a71c63" name="a036c508777f47e8b1aeaf3e911a71c63"></a>
+<a class="el" href="class_microphone___p_d_m___base.html#a7820f0df8f3a4bb09bd6d19874848d56">Range</a>&#160;</td><td class="memItemRight" valign="bottom"><b>range</b> = <a class="el" href="class_microphone___p_d_m___base.html#a7820f0df8f3a4bb09bd6d19874848d56a3bc5fd05092431ab06a7453660490de0">Range::RANGE_2048</a></td></tr>
+<tr class="separator:a036c508777f47e8b1aeaf3e911a71c63 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab60689dd81647a72bc69d0209e951883 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memItemLeft" align="right" valign="top"><a id="ab60689dd81647a72bc69d0209e951883" name="ab60689dd81647a72bc69d0209e951883"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>numSamples</b></td></tr>
+<tr class="separator:ab60689dd81647a72bc69d0209e951883 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_class_microphone___p_d_m___r_t_l872x"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_microphone___p_d_m___r_t_l872x')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_microphone___p_d_m___r_t_l872x.html">Microphone_PDM_RTL872x</a></td></tr>
+<tr class="memitem:a08af7a04ea76d7cd4751a5460641bcee inherit pro_attribs_class_microphone___p_d_m___r_t_l872x"><td class="memItemLeft" align="right" valign="top"><a id="a08af7a04ea76d7cd4751a5460641bcee" name="a08af7a04ea76d7cd4751a5460641bcee"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>running</b> = false</td></tr>
+<tr class="separator:a08af7a04ea76d7cd4751a5460641bcee inherit pro_attribs_class_microphone___p_d_m___r_t_l872x"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-static-attribs" name="pro-static-attribs"></a>
 Static Protected Attributes</h2></td></tr>
 <tr class="memitem:a04012229bed7f997221b8111ac1c2829"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_microphone___p_d_m.html">Microphone_PDM</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_microphone___p_d_m.html#a04012229bed7f997221b8111ac1c2829">_instance</a> = NULL</td></tr>
@@ -243,32 +292,6 @@ static const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>BUFFER
 <tr class="memitem:ad7ff275fb2bf02d44d861ca6737e8ea8 inherit pub_static_attribs_class_microphone___p_d_m___r_t_l872x"><td class="memItemLeft" align="right" valign="top"><a id="ad7ff275fb2bf02d44d861ca6737e8ea8" name="ad7ff275fb2bf02d44d861ca6737e8ea8"></a>
 static const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>NUM_BUFFERS</b> = SP_DMA_PAGE_NUM</td></tr>
 <tr class="separator:ad7ff275fb2bf02d44d861ca6737e8ea8 inherit pub_static_attribs_class_microphone___p_d_m___r_t_l872x"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_attribs_class_microphone___p_d_m___base"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_microphone___p_d_m___base')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_microphone___p_d_m___base.html">Microphone_PDM_Base</a></td></tr>
-<tr class="memitem:ad1b1982d02070201b0894bbd35ed2500 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memItemLeft" align="right" valign="top"><a id="ad1b1982d02070201b0894bbd35ed2500" name="ad1b1982d02070201b0894bbd35ed2500"></a>
-pin_t&#160;</td><td class="memItemRight" valign="bottom"><b>clkPin</b> = A0</td></tr>
-<tr class="separator:ad1b1982d02070201b0894bbd35ed2500 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2863d5149cf7de767600ef62fdc6809 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memItemLeft" align="right" valign="top"><a id="ad2863d5149cf7de767600ef62fdc6809" name="ad2863d5149cf7de767600ef62fdc6809"></a>
-pin_t&#160;</td><td class="memItemRight" valign="bottom"><b>datPin</b> = A1</td></tr>
-<tr class="separator:ad2863d5149cf7de767600ef62fdc6809 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e198278fe10da16fbe81523df52d1c9 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memItemLeft" align="right" valign="top"><a id="a8e198278fe10da16fbe81523df52d1c9" name="a8e198278fe10da16fbe81523df52d1c9"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>stereoMode</b> = false</td></tr>
-<tr class="separator:a8e198278fe10da16fbe81523df52d1c9 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7952d4b0bd76b309cbce53f0b606ff6a inherit pro_attribs_class_microphone___p_d_m___base"><td class="memItemLeft" align="right" valign="top"><a id="a7952d4b0bd76b309cbce53f0b606ff6a" name="a7952d4b0bd76b309cbce53f0b606ff6a"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>sampleRate</b></td></tr>
-<tr class="separator:a7952d4b0bd76b309cbce53f0b606ff6a inherit pro_attribs_class_microphone___p_d_m___base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b8d9df72eda515bbd3ac5243e9981c4 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memItemLeft" align="right" valign="top"><a id="a4b8d9df72eda515bbd3ac5243e9981c4" name="a4b8d9df72eda515bbd3ac5243e9981c4"></a>
-<a class="el" href="class_microphone___p_d_m___base.html#a486adb398afa4f7d58d64fac361e75b3">OutputSize</a>&#160;</td><td class="memItemRight" valign="bottom"><b>outputSize</b> = <a class="el" href="class_microphone___p_d_m___base.html#a486adb398afa4f7d58d64fac361e75b3a0967f1f9733a9ea490013af05f03e1cf">OutputSize::SIGNED_16</a></td></tr>
-<tr class="separator:a4b8d9df72eda515bbd3ac5243e9981c4 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a036c508777f47e8b1aeaf3e911a71c63 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memItemLeft" align="right" valign="top"><a id="a036c508777f47e8b1aeaf3e911a71c63" name="a036c508777f47e8b1aeaf3e911a71c63"></a>
-<a class="el" href="class_microphone___p_d_m___base.html#a7820f0df8f3a4bb09bd6d19874848d56">Range</a>&#160;</td><td class="memItemRight" valign="bottom"><b>range</b> = <a class="el" href="class_microphone___p_d_m___base.html#a7820f0df8f3a4bb09bd6d19874848d56a3bc5fd05092431ab06a7453660490de0">Range::RANGE_2048</a></td></tr>
-<tr class="separator:a036c508777f47e8b1aeaf3e911a71c63 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab60689dd81647a72bc69d0209e951883 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memItemLeft" align="right" valign="top"><a id="ab60689dd81647a72bc69d0209e951883" name="ab60689dd81647a72bc69d0209e951883"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>numSamples</b></td></tr>
-<tr class="separator:ab60689dd81647a72bc69d0209e951883 inherit pro_attribs_class_microphone___p_d_m___base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pro_attribs_class_microphone___p_d_m___r_t_l872x"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_microphone___p_d_m___r_t_l872x')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_microphone___p_d_m___r_t_l872x.html">Microphone_PDM_RTL872x</a></td></tr>
-<tr class="memitem:a08af7a04ea76d7cd4751a5460641bcee inherit pro_attribs_class_microphone___p_d_m___r_t_l872x"><td class="memItemLeft" align="right" valign="top"><a id="a08af7a04ea76d7cd4751a5460641bcee" name="a08af7a04ea76d7cd4751a5460641bcee"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>running</b> = false</td></tr>
-<tr class="separator:a08af7a04ea76d7cd4751a5460641bcee inherit pro_attribs_class_microphone___p_d_m___r_t_l872x"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class for using the hardware PDM (pulse-density modulation) audio decoder on RTL872x and nRF52 devices. </p>
@@ -331,6 +354,36 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>running</b> = false</
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a50941131933652d0e1464173fe3ad61e" name="a50941131933652d0e1464173fe3ad61e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50941131933652d0e1464173fe3ad61e">&#9670;&#160;</a></span>bufferSamplingStart()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Microphone_PDM::bufferSamplingStart </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_microphone___p_d_m___buffer_sampling.html">Microphone_PDM_BufferSampling</a> *&#160;</td>
+          <td class="paramname"><em>sampling</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>brief Sample data into a buffer </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sampling</td><td><a class="el" href="class_microphone___p_d_m___buffer_sampling.html" title="Class to configure buffer sampling mode.">Microphone_PDM_BufferSampling</a> class. Must be allocated with new. Ownerships transfers to this class.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true </dd>
+<dd>
+false</dd></dl>
+<p>Added in version 0.0.2 </p>
+
+</div>
+</div>
 <a id="ad28699d53cfe8fad28526f015202d7ff" name="ad28699d53cfe8fad28526f015202d7ff"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad28699d53cfe8fad28526f015202d7ff">&#9670;&#160;</a></span>copySamples()</h2>
 
@@ -368,6 +421,34 @@ false</dd></dl>
 <p>You can skip calling <a class="el" href="class_microphone___p_d_m.html#a2d0164f5c641fcad787320e0f308c4f3" title="Return true if there is data available to be copied using copySamples.">samplesAvailable()</a> and just call copySamples which will return false in the same cases where <a class="el" href="class_microphone___p_d_m.html#a2d0164f5c641fcad787320e0f308c4f3" title="Return true if there is data available to be copied using copySamples.">samplesAvailable()</a> would have returned false. </p>
 
 <p>Reimplemented from <a class="el" href="class_microphone___p_d_m__n_r_f52.html#a74f95823a7adeb5ff09dfc06953cc434">Microphone_PDM_nRF52</a>.</p>
+
+</div>
+</div>
+<a id="a9c5dc3695cf36c440613f36a2fe1b7a2" name="a9c5dc3695cf36c440613f36a2fe1b7a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c5dc3695cf36c440613f36a2fe1b7a2">&#9670;&#160;</a></span>getBitsPerSample()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t Microphone_PDM::getBitsPerSample </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the number of bits per sample, 8 or 16. </p>
+<dl class="section return"><dt>Returns</dt><dd>uint8_t bits per sample (8 or 16) </dd></dl>
 
 </div>
 </div>
@@ -431,6 +512,62 @@ false</dd></dl>
 
 </div>
 </div>
+<a id="af7b610834444ba4139e0a0e554ad3183" name="af7b610834444ba4139e0a0e554ad3183"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7b610834444ba4139e0a0e554ad3183">&#9670;&#160;</a></span>getNumChannels()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t Microphone_PDM::getNumChannels </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the number of channels, either 1 or 2. </p>
+<dl class="section return"><dt>Returns</dt><dd>uint8_t </dd></dl>
+
+</div>
+</div>
+<a id="a614f5f109028e53837b5444e3f0cc797" name="a614f5f109028e53837b5444e3f0cc797"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a614f5f109028e53837b5444e3f0cc797">&#9670;&#160;</a></span>getSampleRate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Microphone_PDM::getSampleRate </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the sample rate, either 16000 or 32000. </p>
+<dl class="section return"><dt>Returns</dt><dd>int </dd></dl>
+
+</div>
+</div>
 <a id="a13625cb6f5e80cbef1bf79d5315982d4" name="a13625cb6f5e80cbef1bf79d5315982d4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a13625cb6f5e80cbef1bf79d5315982d4">&#9670;&#160;</a></span>getSampleSizeInBytes()</h2>
 
@@ -448,6 +585,34 @@ false</dd></dl>
 
 <p>Get the sample size in bytes. </p>
 <dl class="section return"><dt>Returns</dt><dd>size_t 1 (8-bit samples) or 2 (16-bit samples) </dd></dl>
+
+</div>
+</div>
+<a id="ab4e64c5aa4a129f6d5691a0ae8b84a4d" name="ab4e64c5aa4a129f6d5691a0ae8b84a4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4e64c5aa4a129f6d5691a0ae8b84a4d">&#9670;&#160;</a></span>getSampling()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_microphone___p_d_m___buffer_sampling.html">Microphone_PDM_BufferSampling</a> * Microphone_PDM::getSampling </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the <a class="el" href="class_microphone___p_d_m___buffer_sampling.html" title="Class to configure buffer sampling mode.">Microphone_PDM_BufferSampling</a> object if it has been set by bufferSamplingStart. </p>
+<dl class="section return"><dt>Returns</dt><dd>Microphone_PDM_BufferSampling* </dd></dl>
 
 </div>
 </div>
@@ -506,6 +671,27 @@ false</dd></dl>
 
 <p>Get the singleton instance of this class. </p>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_microphone___p_d_m.html" title="Class for using the hardware PDM (pulse-density modulation) audio decoder on RTL872x and nRF52 device...">Microphone_PDM</a>&amp; </dd></dl>
+
+</div>
+</div>
+<a id="a0eb25feea2c8c14088e54fc4111becf2" name="a0eb25feea2c8c14088e54fc4111becf2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0eb25feea2c8c14088e54fc4111becf2">&#9670;&#160;</a></span>loop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Microphone_PDM::loop </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Call from <a class="el" href="class_microphone___p_d_m.html#a0eb25feea2c8c14088e54fc4111becf2" title="Call from loop() to process samples.">loop()</a> to process samples. </p>
+<p>This is only required if you are using buffering mode, but you can call it in all cases if desired.</p>
+<p>Added in version 0.0.2 </p>
 
 </div>
 </div>
@@ -577,6 +763,25 @@ false</dd></dl>
 </table>
 </div><div class="memdoc">
 <p>This class is a singleton and cannot be copied </p>
+
+</div>
+</div>
+<a id="a73ca4e0264e37a36fa6f9406542abd03" name="a73ca4e0264e37a36fa6f9406542abd03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73ca4e0264e37a36fa6f9406542abd03">&#9670;&#160;</a></span>releaseBufferSampling()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Microphone_PDM::releaseBufferSampling </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Release the buffer used by <a class="el" href="class_microphone___p_d_m.html#a50941131933652d0e1464173fe3ad61e" title="brief Sample data into a buffer">bufferSamplingStart()</a> </p>
 
 </div>
 </div>
@@ -910,6 +1115,29 @@ false </dd></dl>
 
 <p>Singleton instance of this class. </p>
 <p>Since there is only one PDM decoder on the nRF52 you must create only one instance of this class (typically as a global variable). </p>
+
+</div>
+</div>
+<a id="a81e57e5ec463ad6e8c510f426d495c80" name="a81e57e5ec463ad6e8c510f426d495c80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81e57e5ec463ad6e8c510f426d495c80">&#9670;&#160;</a></span>sampling</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_microphone___p_d_m___buffer_sampling.html">Microphone_PDM_BufferSampling</a>* Microphone_PDM::sampling = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Class to hold parameters and state for buffer sampling </p>
 
 </div>
 </div>

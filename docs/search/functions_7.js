@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['uninit_0',['uninit',['../class_microphone___p_d_m.html#a2a2bfaaef0dbc6aa07f1129c136b7425',1,'Microphone_PDM::uninit()'],['../class_microphone___p_d_m__n_r_f52.html#a0729a88247b80934208e3d6c8692c7e2',1,'Microphone_PDM_nRF52::uninit()'],['../class_microphone___p_d_m___r_t_l872x.html#aa1fe84be6836937a7ac0c54cee5b0d32',1,'Microphone_PDM_RTL872x::uninit()']]]
+  ['nocopysamples_0',['noCopySamples',['../class_microphone___p_d_m.html#a1cf35acb9dfb31946a8a02213e4463b6',1,'Microphone_PDM::noCopySamples()'],['../class_microphone___p_d_m__n_r_f52.html#a5577758c19ecc8e86efe6150da30ca4b',1,'Microphone_PDM_nRF52::noCopySamples()'],['../class_microphone___p_d_m___r_t_l872x.html#ab7a70acf5bfe41d3ca64e6bd6e451f71',1,'Microphone_PDM_RTL872x::noCopySamples()']]]
 ];

@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['samplesavailable_0',['samplesAvailable',['../class_microphone___p_d_m.html#a2d0164f5c641fcad787320e0f308c4f3',1,'Microphone_PDM::samplesAvailable()'],['../class_microphone___p_d_m__n_r_f52.html#a1bd4c6b16b31b3d14dfa94facc7c8cab',1,'Microphone_PDM_nRF52::samplesAvailable()'],['../class_microphone___p_d_m___r_t_l872x.html#a6d9a8e9319cf01513e99e5bbd9283202',1,'Microphone_PDM_RTL872x::samplesAvailable()']]],
-  ['start_1',['start',['../class_microphone___p_d_m.html#a6f4cca213ff55b01b4a73f196154dfd7',1,'Microphone_PDM::start()'],['../class_microphone___p_d_m__n_r_f52.html#a8a4c22886f96ea0c80681efa156c0507',1,'Microphone_PDM_nRF52::start()'],['../class_microphone___p_d_m___r_t_l872x.html#a924b441d86c970354b6de097d1b0fbee',1,'Microphone_PDM_RTL872x::start()']]],
-  ['stop_2',['stop',['../class_microphone___p_d_m.html#a0e1d3318edf018b7e98ce91da3569f69',1,'Microphone_PDM::stop()'],['../class_microphone___p_d_m__n_r_f52.html#a8b92a83716cfdd0bdef848cbcbcbfb8e',1,'Microphone_PDM_nRF52::stop()'],['../class_microphone___p_d_m___r_t_l872x.html#a16cee1eee8cc3654f8571ea8c7ac719e',1,'Microphone_PDM_RTL872x::stop()']]]
+  ['microphone_5fpdm_0',['Microphone_PDM',['../class_microphone___p_d_m.html#a754658ab25a79e8d4e377de19b9d481d',1,'Microphone_PDM::Microphone_PDM()'],['../class_microphone___p_d_m.html#a16c02634b1d41798315b07225f1cc012',1,'Microphone_PDM::Microphone_PDM(const Microphone_PDM &amp;)=delete']]],
+  ['microphone_5fpdm_5fbase_1',['Microphone_PDM_Base',['../class_microphone___p_d_m___base.html#a67550b70326be6f46697c6e6b996c80b',1,'Microphone_PDM_Base']]],
+  ['microphone_5fpdm_5fbuffersampling_2',['Microphone_PDM_BufferSampling',['../class_microphone___p_d_m___buffer_sampling.html#aed678907467b6fa9e2fa8273ac853eb9',1,'Microphone_PDM_BufferSampling']]],
+  ['microphone_5fpdm_5fnrf52_3',['Microphone_PDM_nRF52',['../class_microphone___p_d_m__n_r_f52.html#a0cdd0fc7f2285f98674638d63a6bd197',1,'Microphone_PDM_nRF52']]],
+  ['microphone_5fpdm_5frtl872x_4',['Microphone_PDM_RTL872x',['../class_microphone___p_d_m___r_t_l872x.html#a668d08b640844a4a696e31dbfffe597d',1,'Microphone_PDM_RTL872x']]]
 ];

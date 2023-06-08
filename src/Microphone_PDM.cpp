@@ -41,6 +41,35 @@ Microphone_PDM &Microphone_PDM::withGainDb(float gain) {
 }
 #endif
 
+
+
+void Microphone_PDM::loop() {
+	if (sampling) {
+		sampling->loop();
+	}
+
+}
+
+
+bool Microphone_PDM::bufferSamplingStart(Microphone_PDM_BufferSampling *sampling) {
+	releaseBufferSampling();
+
+	this->sampling = sampling;
+
+	return sampling->start();
+}
+
+/**
+ * @brief Release the buffer used by bufferSamplingStart()
+ * 
+ */
+void Microphone_PDM::releaseBufferSampling() {
+	if (sampling) {
+		delete sampling;
+	}
+	sampling = NULL;
+}
+
 size_t Microphone_PDM::getSampleSizeInBytes() const {
 	switch(outputSize) {
 		case OutputSize::UNSIGNED_8:
@@ -113,3 +142,48 @@ void Microphone_PDM_Base::copySamplesInternal(const int16_t *src, uint8_t *dst) 
 }
 
 
+
+Microphone_PDM_BufferSampling::Microphone_PDM_BufferSampling() {
+}
+
+Microphone_PDM_BufferSampling::~Microphone_PDM_BufferSampling() {
+	if (buffer) {
+		delete[] buffer;		
+	}
+}
+
+bool Microphone_PDM_BufferSampling::start() {
+	sampleSizeInBytes = Microphone_PDM::instance().getSampleSizeInBytes();
+
+	offset = reserveHeaderSize;
+	bufferSize = reserveHeaderSize + (Microphone_PDM::instance().getSampleRate() / 1000 * durationMs) * sampleSizeInBytes;
+
+	buffer = new uint8_t[bufferSize];
+
+	return buffer != NULL;
+}
+
+void Microphone_PDM_BufferSampling::loop() {
+	if (buffer && offset < bufferSize && Microphone_PDM::instance().samplesAvailable()) {
+
+		Microphone_PDM::instance().noCopySamples([this](void *pSamples, size_t numSamples) {
+			size_t bytesToCopy = sampleSizeInBytes * numSamples;
+
+			if ((offset + bytesToCopy) > bufferSize) {
+				bytesToCopy = bufferSize - offset;
+			}
+			memcpy(&buffer[offset], pSamples, bytesToCopy);
+			offset += bytesToCopy;
+
+			if (offset >= bufferSize && completionCallback) {
+				preCompletion();
+
+				completionCallback(buffer, bufferSize);
+			}
+		});
+
+	}
+}
+bool Microphone_PDM_BufferSampling::done() const {
+	return buffer && offset >= bufferSize;
+}

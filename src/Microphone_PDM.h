@@ -4,6 +4,116 @@
 #include "Particle.h"
 
 /**
+ * @brief Class to configure buffer sampling mode
+ * 
+ * This class both configures the settings and also is a container for the sample data.
+ * 
+ * Allocate this structure with new Microphone_PDM_BufferSampling(), not on the stack! The object ownerships transfers to 
+ * the Microphone_PDM class which will take care of deleting it.
+ */
+class Microphone_PDM_BufferSampling {
+public:
+	/**
+	 * @brief Constructor - do not allocate on the stack!
+	 */
+	Microphone_PDM_BufferSampling();
+
+	/**
+	 * @brief Destructor
+	 */
+	virtual ~Microphone_PDM_BufferSampling();
+
+	/**
+	 * @brief Set the how long you want to record in milliseconds
+	 */
+	Microphone_PDM_BufferSampling &withDurationMs(unsigned long ms) { this->durationMs = ms; return *this;};
+
+	/**
+	 * @brief Sets a callback function to call when samples are received (optional)
+	 * 
+	 * @param completionCallback Function or lambda to call when the samples are 
+	 */
+	Microphone_PDM_BufferSampling &withCompletionCallback(std::function<void(uint8_t *buf, size_t bufSize)> completionCallback) { this->completionCallback = completionCallback; return *this;};
+
+	/**
+	 * @brief Sets the reserve space in before the data. This is used to leave space for the wav header
+	 * 
+	 * @param reserveHeaderSize 
+	 * @return Microphone_PDM_BufferSampling& 
+	 */
+	Microphone_PDM_BufferSampling &withReserveHeaderSize(size_t reserveHeaderSize) { this->reserveHeaderSize = reserveHeaderSize; return *this;};
+
+	/**
+	 * @brief Start sampling data
+	 * 
+	 * @return true 
+	 * @return false 
+	 */
+	virtual bool start();
+
+	/**
+	 * @brief Must be called from the application loop
+	 */
+	virtual void loop();
+
+	/**
+	 * @brief If not using the completion callback, call this to see when the buffering is done
+	 * 
+	 * @return true 
+	 * @return false 
+	 * 
+	 * The buffer member is the pointer to the buffer.
+	 * The bufferSize member is the size in bytes.
+	 */
+	virtual bool done() const;
+
+	/**
+	 * @brief This methods can be overridden process the data before calling the completion callback
+	 * 
+	 * The Microphone_PDM_BufferSampling_wav class does this to write the wav header.
+	 */
+	virtual void preCompletion() {};
+
+	/**
+	 * Buffer allocated dynamically if bufferSamplingStart() is used. Released by bufferSamplingRelease().
+	 */
+	uint8_t *buffer = 0;
+
+	/**
+	 * Current offset writing to bufferSamplingBuffer if bufferSamplingStart() is being used
+	 */
+	size_t offset = 0;
+
+	/**
+	 * Size of bufferSamplingBuffer in bytes. Set by bufferSamplingStart(). 
+	 */
+	size_t bufferSize = 0;
+
+	/**
+	 * How long to capture in milliseconds
+	 */
+	unsigned long durationMs = 0;
+
+	/**
+	 * Callback to call when buffer is complete
+	 */
+	std::function<void(uint8_t *buf, size_t bufSize)> completionCallback = 0;
+
+	/**
+	 * Reserves space before the data. This is done by the Microphone_PDM_BufferSampling_wav to
+	 * leave room for the wav header so the memory does not need to be resized or moved.
+	 */
+	size_t reserveHeaderSize = 0;
+
+	/**
+	 * Filled in during start() so it doesn't need to be retrieved from the Microphone_PDM class
+	 * every time it's needed (which is often).
+	 */
+	size_t sampleSizeInBytes;
+};
+
+
+/**
  * @brief Class used for settings. You will not instantiate one of these; it's a base class of Microphone_PDM_MCU.
  * 
  * There are accessor methods for setting these settings in the Microphone_PDM class.
@@ -37,7 +147,12 @@ public:
 		RANGE_32768, 	//!< From -32768 to 32767 (16 bits) (same as raw mode)
 	};
 
-
+	/**
+	 * @brief Return the sample rate (16000 or 32000) in samples per second
+	 * 
+	 * @return int 
+	 */
+	int getSampleRate() const { return sampleRate; };
 
 protected:
 	/**
@@ -92,6 +207,7 @@ protected:
 #else
 	#error "unsupported platform"
 #endif
+
 
 
 /**
@@ -226,6 +342,42 @@ public:
 	}
 
 	/**
+	 * @brief Call from loop() to process samples 
+	 * 
+	 * This is only required if you are using buffering mode, but you can call it in all cases if desired.
+	 * 
+	 * Added in version 0.0.2
+	 */
+	void loop();
+
+	/**
+	 * @brief brief Sample data into a buffer
+	 * 
+	 * @param sampling Microphone_PDM_BufferSampling class. Must be allocated with new. Ownerships transfers to this class.
+	 * 
+	 * @return true 
+	 * @return false 
+	 * 
+	 * Added in version 0.0.2
+	 */
+	bool bufferSamplingStart(Microphone_PDM_BufferSampling *sampling);
+
+	/**
+	 * @brief Release the buffer used by bufferSamplingStart()
+	 * 
+	 */
+	void releaseBufferSampling();
+	
+
+	/**
+	 * @brief Get the Microphone_PDM_BufferSampling object if it has been set by bufferSamplingStart
+	 * 
+	 * @return Microphone_PDM_BufferSampling* 
+	 */
+	Microphone_PDM_BufferSampling *getSampling() { return sampling; };
+
+	
+	/**
 	 * @brief Return true if there is data available to be copied using copySamples
 	 * 
 	 * @return true 
@@ -314,6 +466,26 @@ public:
 		return getSampleSizeInBytes() * getNumberOfSamples();
 	}
 
+	/**
+	 * @brief Get the number of channels, either 1 or 2
+	 * 
+	 * @return uint8_t 
+	 */
+	uint8_t getNumChannels() const { return stereoMode ? 2 : 1; };
+	
+	/**
+	 * @brief Get the sample rate, either 16000 or 32000
+	 * 
+	 * @return int 
+	 */
+	int getSampleRate() const { return sampleRate; };
+	
+	/**
+	 * @brief Get the number of bits per sample, 8 or 16
+	 * 
+	 * @return uint8_t bits per sample (8 or 16)
+	 */
+	uint8_t getBitsPerSample() const { return (uint8_t) getSampleSizeInBytes() * 8; };
 
 protected:
 	/**
@@ -338,6 +510,11 @@ protected:
     Microphone_PDM& operator=(const Microphone_PDM&) = delete;
 
 	/**
+	 * Class to hold parameters and state for buffer sampling
+	 */
+	Microphone_PDM_BufferSampling *sampling = 0;
+
+	/**
 	 * @brief Singleton instance of this class
 	 *
 	 * Since there is only one PDM decoder on the nRF52 you must create only one instance of this class
@@ -345,7 +522,5 @@ protected:
 	 */
 	static Microphone_PDM *_instance;
 };
-
-
 
 #endif /* __Microphone_PDM_H */
