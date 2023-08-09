@@ -1,5 +1,5 @@
 #include "Microphone_PDM.h"
-#include "WavWriter.h"
+#include "MicWavWriter.h"
 
 SYSTEM_THREAD(ENABLED);
 SYSTEM_MODE(SEMI_AUTOMATIC);

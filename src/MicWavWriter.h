@@ -7,10 +7,10 @@
 /**
  * @brief Class for manipulating wav file headers
  */
-class WavHeaderBase {
+class MicWavHeaderBase {
 public:
-	WavHeaderBase(uint8_t *buffer, size_t bufferSize);
-	virtual ~WavHeaderBase();
+	MicWavHeaderBase(uint8_t *buffer, size_t bufferSize);
+	virtual ~MicWavHeaderBase();
 
 	/**
 	 * @brief Writes the wav file header to the start of buffer and updates bufferOffset
@@ -100,9 +100,9 @@ protected:
  * For writing wav headers, it must be at least 44 bytes.
  */
 template <size_t BUFFER_SIZE>
-class WavHeader : public WavHeaderBase {
+class MicWavHeader : public MicWavHeaderBase {
 public:
-	explicit WavHeader() : WavHeaderBase(staticBuffer, BUFFER_SIZE) {};
+	explicit MicWavHeader() : MicWavHeaderBase(staticBuffer, BUFFER_SIZE) {};
 
 private:
 	uint8_t staticBuffer[BUFFER_SIZE]; //!< static buffer to write to

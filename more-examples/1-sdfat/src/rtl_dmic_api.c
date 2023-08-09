@@ -1,1 +1,0 @@
-../../../src/rtl_dmic_api.c

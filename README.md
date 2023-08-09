@@ -148,6 +148,10 @@ This example requires a lot of parts:
 
 ## Version History
 
+#### 0.0.3 (2023-08-09)
+
+- Renamed WavHeaderBase class to avoid conflict with SdFatWavRK library
+
 #### 0.0.1 (2023-05-12)
 
 - Initial version

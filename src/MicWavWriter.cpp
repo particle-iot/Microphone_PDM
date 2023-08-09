@@ -1,4 +1,4 @@
-#include "WavWriter.h"
+#include "MicWavWriter.h"
 
 
 // Define the debug logging level here
@@ -21,14 +21,14 @@
 #define DEBUG_HIGH(x)
 #endif
 
-WavHeaderBase::WavHeaderBase(uint8_t *buffer, size_t bufferSize) : buffer(buffer), bufferSize(bufferSize) {
+MicWavHeaderBase::MicWavHeaderBase(uint8_t *buffer, size_t bufferSize) : buffer(buffer), bufferSize(bufferSize) {
 
 }
-WavHeaderBase::~WavHeaderBase() {
+MicWavHeaderBase::~MicWavHeaderBase() {
 
 }
 
-bool WavHeaderBase::writeHeader(uint8_t numChannels, uint32_t sampleRate, uint8_t bitsPerSample, uint32_t dataSizeInBytes) {
+bool MicWavHeaderBase::writeHeader(uint8_t numChannels, uint32_t sampleRate, uint8_t bitsPerSample, uint32_t dataSizeInBytes) {
 	if (bufferSize < 44) {
 		DEBUG_NORMAL(("buffer too small, was %d need 44", bufferSize));
 		return false;
@@ -80,14 +80,14 @@ bool WavHeaderBase::writeHeader(uint8_t numChannels, uint32_t sampleRate, uint8_
 }
 
 
-void WavHeaderBase::setDataSize(uint32_t dataSizeInBytes) {
+void MicWavHeaderBase::setDataSize(uint32_t dataSizeInBytes) {
 	// DEBUG_HIGH(("setDataSize %lu", dataSizeInBytes));
 
 	setUint32LE(4, dataSizeInBytes + 36);
 	setUint32LE(40, dataSizeInBytes);
 }
 
-uint32_t WavHeaderBase::getDataOffset() const {
+uint32_t MicWavHeaderBase::getDataOffset() const {
 	size_t chunkDataOffset;
 	uint32_t chunkDataSize;
 
@@ -100,7 +100,7 @@ uint32_t WavHeaderBase::getDataOffset() const {
 	}
 }
 
-bool WavHeaderBase::findChunk(uint32_t id, size_t &chunkDataOffset, uint32_t &chunkDataSize) const {
+bool MicWavHeaderBase::findChunk(uint32_t id, size_t &chunkDataOffset, uint32_t &chunkDataSize) const {
 	// 12 is start of subchunk 1 for all RIFF WAVE files
 	size_t offset = 12;
 
@@ -123,30 +123,30 @@ bool WavHeaderBase::findChunk(uint32_t id, size_t &chunkDataOffset, uint32_t &ch
 // The LE and BE functions assume current Particle ARM Cortex processors that are little
 // endian. This could probably be made more portable.
 
-void WavHeaderBase::setUint16LE(size_t offset, uint16_t value) {
+void MicWavHeaderBase::setUint16LE(size_t offset, uint16_t value) {
 	// Currently all of the fields in a wav file appear to be aligned, but using
 	// memcpy is safer and makes sure we won't get an unaligned exception in these functions
 	memcpy(&buffer[offset], &value, 2);
 }
 
-uint16_t WavHeaderBase::getUint16LE(size_t offset) const {
+uint16_t MicWavHeaderBase::getUint16LE(size_t offset) const {
 	uint16_t result;
 	memcpy(&result, &buffer[offset], 2);
 	return result;
 }
 
-void WavHeaderBase::setUint32LE(size_t offset, uint32_t value) {
+void MicWavHeaderBase::setUint32LE(size_t offset, uint32_t value) {
 	memcpy(&buffer[offset], &value, 4);
 }
 
-uint32_t WavHeaderBase::getUint32LE(size_t offset) const {
+uint32_t MicWavHeaderBase::getUint32LE(size_t offset) const {
 	uint32_t result;
 	memcpy(&result, &buffer[offset], 4);
 	return result;
 }
 
 // [static]
-uint32_t WavHeaderBase::fourCharStringToValue(const char *str)  {
+uint32_t MicWavHeaderBase::fourCharStringToValue(const char *str)  {
 	uint32_t value = 0;
 
 	value |= ((uint32_t)str[0]) << 24;
@@ -157,14 +157,14 @@ uint32_t WavHeaderBase::fourCharStringToValue(const char *str)  {
 	return value;
 }
 
-void WavHeaderBase::setUint32BE(size_t offset, uint32_t value) {
+void MicWavHeaderBase::setUint32BE(size_t offset, uint32_t value) {
 	buffer[offset]     = (uint8_t) (value >> 24);
 	buffer[offset + 1] = (uint8_t) (value >> 16);
 	buffer[offset + 2] = (uint8_t) (value >> 8);
 	buffer[offset + 3] = (uint8_t) value;
 }
 
-uint32_t WavHeaderBase::getUint32BE(size_t offset) const {
+uint32_t MicWavHeaderBase::getUint32BE(size_t offset) const {
 	uint32_t value = 0;
 
 	value |= ((uint32_t)buffer[offset]) << 24;
@@ -226,11 +226,11 @@ The "data" subchunk contains the size of the data and the actual sound:
 
 
 Microphone_PDM_BufferSampling_wav::Microphone_PDM_BufferSampling_wav() {
-	reserveHeaderSize = WavHeaderBase::STANDARD_SIZE;
+	reserveHeaderSize = MicWavHeaderBase::STANDARD_SIZE;
 }
 
 void Microphone_PDM_BufferSampling_wav::preCompletion() {
-	WavHeaderBase wav(buffer, bufferSize);
+	MicWavHeaderBase wav(buffer, bufferSize);
 
 	wav.writeHeader(
 		Microphone_PDM::instance().getNumChannels(),
