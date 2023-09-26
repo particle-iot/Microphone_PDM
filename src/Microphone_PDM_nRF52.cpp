@@ -14,7 +14,7 @@ Microphone_PDM_nRF52::~Microphone_PDM_nRF52() {
 
 
 int Microphone_PDM_nRF52::init() {
-#if SYSTEM_VERSION >= SYSTEM_VERSION_v500
+#if SYSTEM_VERSION >= SYSTEM_VERSION_DEFAULT(5, 0, 0)
 	Hal_Pin_Info *pinMap = hal_pin_map();
 #else
 	Hal_Pin_Info *pinMap = HAL_Pin_Map();

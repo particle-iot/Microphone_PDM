@@ -148,6 +148,10 @@ This example requires a lot of parts:
 
 ## Version History
 
+#### 0.0.4 (2023-08-09)
+
+- Fixed compile error on Device OS 4.x and earlier on nRF52
+
 #### 0.0.3 (2023-08-09)
 
 - Renamed WavHeaderBase class to avoid conflict with SdFatWavRK library
