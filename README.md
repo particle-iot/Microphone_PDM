@@ -32,7 +32,12 @@ The pins needed for Adafruit PDM microphones are:
 - CLK - PDM clock into breakout board, 1 - 3 MHz square wave required.
 - DAT - PDM data out of breakout board
 
-On the nRF52 (Boron, etc.) the PDM CLK and DAT lines are configurable to other pins, but on RTL872x (P2 and Photon 2), only A0 (CLK) and D1 (DAT) can be used.
+On the nRF52 (Boron, etc.) the PDM CLK and DAT lines are configurable to other pins, but on RTL872x, only specific pins can be used:
+
+| Signal | P2/Photon 2 | M-SoM/Muon | nRF52 |
+| :--- | :---: | :--: | :---: |
+| CLK | A0 | A3 | Any |
+| DAT | A1 | A4 | Any |
 
 On both MCUs, the built-in hardware PDM decoder is used, along with DMA to write to the buffer, so the operation is 
 very efficient and does not block the execution of your code while sampling audio.
