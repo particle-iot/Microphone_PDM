@@ -40,7 +40,10 @@ static SP_RX_INFO sp_rx_info;
 
 //The size of this buffer should be multiples of 32 and its head address should align to 32 
 //to prevent problems that may occur when CPU and DMA access this area simultaneously. 
-SRAM_NOCACHE_DATA_SECTION static u8 sp_rx_buf[SP_DMA_PAGE_SIZE*SP_DMA_PAGE_NUM]__attribute__((aligned(32)));
+// This previously used SRAM_NOCACHE_DATA_SECTION but this causes an error:
+// gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/bin/ld: section .backup VMA [000000001007b400,000000001007b403] overlaps section .bdsram.data VMA [000000001007ad40,000000001007b53f]
+// gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/bin/ld: region `SRAM' overflowed by 2020 bytes
+static u8 sp_rx_buf[SP_DMA_PAGE_SIZE*SP_DMA_PAGE_NUM]__attribute__((aligned(32)));
 static u8 sp_full_buf[SP_FULL_BUF_SIZE]__attribute__((aligned(32)));
 
 

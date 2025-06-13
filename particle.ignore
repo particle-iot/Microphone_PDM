@@ -1,4 +1,4 @@
-.vscode/**
-docs/**
-images/**
-more-examples/**
+.vscode/**/*.*
+docs/**/*.*
+images/**/*.*
+more-examples/**/*.*

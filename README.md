@@ -153,6 +153,11 @@ This example requires a lot of parts:
 
 ## Version History
 
+#### 0.0.5 (2025-06-13)
+
+- Fix SRAM overflow on RTL872x
+- Add new example (DTMF decoding)
+
 #### 0.0.4 (2023-08-09)
 
 - Fixed compile error on Device OS 4.x and earlier on nRF52
